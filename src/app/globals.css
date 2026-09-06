@@ -10,8 +10,8 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-jakarta), sans-serif; letter-spacing
 a,button,input,textarea,[role="button"] { -webkit-tap-highlight-color: transparent; }
 .container-site { width: min(100% - 2.5rem, 80rem); margin-inline: auto; }
 .section { padding-block: 4rem; }
-.section-title { margin-top: .5rem; max-width: 22ch; font-size: clamp(2rem,4vw,3.4rem); line-height: 1.05; font-weight: 700; color: #081A43; }
-.eyebrow { font-size: .78rem; line-height: 1; font-weight: 800; text-transform: uppercase; letter-spacing: .18em; color: #47617F; }
+.section-title { margin-top: .5rem; max-width: 22ch; font-size: clamp(2rem,4vw,3.4rem); line-height: 1.05; font-weight: 700; color: inherit; }
+.eyebrow { font-size: .78rem; line-height: 1; font-weight: 800; text-transform: uppercase; letter-spacing: .18em; color: inherit; }
 .skip-link { position: fixed; left: 1rem; top: -5rem; z-index: 999; background: #F5A524; color:#050F2C; padding:.75rem 1rem; border-radius:.5rem; font-weight:700; }
 .skip-link:focus { top: 1rem; }
 @media (min-width:768px){ .section { padding-block: 6rem; } .container-site { width: min(100% - 4rem, 80rem); } }

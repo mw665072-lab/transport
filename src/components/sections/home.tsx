@@ -7,7 +7,6 @@ import {
   Phone,
   ShieldCheck,
   Truck,
-  Users,
 } from "lucide-react";
 import { COMPANY, CREDENTIALS } from "@/lib/data/company";
 import { SERVICES } from "@/lib/data/services";
@@ -16,7 +15,6 @@ import { EQUIPMENT } from "@/lib/data/equipment";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/shared/reveal";
-import { UsMap } from "@/components/shared/us-map";
 
 export function HomeHero() {
   return (
@@ -98,8 +96,10 @@ export function ServicesSection() {
         <Reveal>
           <div className="flex items-end justify-between gap-6">
             <div>
-              <p className="eyebrow">What we move</p>
-              <h2 className="section-title">Road freight services built around real equipment.</h2>
+              <p className="eyebrow text-steel-600">What we move</p>
+              <h2 className="section-title text-navy-900">
+                Road freight services built around real equipment.
+              </h2>
             </div>
             <Link
               href="/services"
@@ -137,10 +137,10 @@ export function ServicesSection() {
 export function CoverageSection() {
   return (
     <section className="section bg-slate-50">
-      <div className="container-site grid items-center gap-10 lg:grid-cols-2">
+      <div className="container-site grid items-center gap-12 lg:grid-cols-2">
         <Reveal className="order-2 lg:order-1">
-          <p className="eyebrow">Coverage area</p>
-          <h2 className="section-title">Focused lanes. Clear service areas.</h2>
+          <p className="eyebrow text-steel-600">Coverage area</p>
+          <h2 className="section-title text-navy-900">Focused lanes. Clear service areas.</h2>
           <p className="mt-5 max-w-[65ch] leading-relaxed text-steel-600">
             Current stated coverage includes four core states with surrounding interstate
             regions handled according to driver, lane, and equipment availability.
@@ -149,20 +149,55 @@ export function CoverageSection() {
             {COVERAGE.states.map((s) => (
               <span
                 key={s}
-                className="rounded-full bg-gold-500 px-4 py-2 text-sm font-bold text-navy-950"
+                className="rounded-full bg-gold-500 px-4 py-2 text-sm font-bold text-navy-950 shadow-sm"
               >
                 {s}
               </span>
             ))}
           </div>
+          <div className="mt-6 space-y-2 text-sm text-steel-600">
+            <p className="font-semibold text-navy-900">Key Operating Lanes:</p>
+            {COVERAGE.lanes.map((lane) => (
+              <div key={lane} className="flex items-center gap-2 text-xs md:text-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-gold-500" />
+                <span>{lane}</span>
+              </div>
+            ))}
+          </div>
           <Button asChild variant="navy" className="mt-7">
             <Link href="/coverage-area">
-              View Coverage <ArrowRight className="h-4 w-4" />
+              View Full Coverage <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </Reveal>
+
         <Reveal className="order-1 lg:order-2">
-          <UsMap />
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-navy-950 shadow-2xl transition hover:shadow-gold-500/10">
+            <div className="relative aspect-[4/3] w-full">
+              <Image
+                src="/images/us-coverage-map.jpg"
+                alt="Zewar Transport US freight routes and coverage map connecting California, Nevada, Texas, and Virginia"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="border-t border-white/10 bg-navy-950/90 px-5 py-3.5 backdrop-blur-md">
+              <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
+                <div className="flex items-center gap-2 font-medium">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400 opacity-75"></span>
+                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold-500"></span>
+                  </span>
+                  <span className="text-white font-semibold">Active Transit Corridors</span>
+                </div>
+                <span className="font-bold text-gold-400">
+                  CA · NV · TX · VA + Interstate
+                </span>
+              </div>
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -174,25 +209,42 @@ export function EquipmentSection() {
     <section className="section">
       <div className="container-site">
         <Reveal>
-          <p className="eyebrow">Equipment</p>
-          <h2 className="section-title">Road-ready equipment for practical freight moves.</h2>
+          <p className="eyebrow text-steel-600">Equipment</p>
+          <h2 className="section-title text-navy-900">
+            Road-ready equipment for practical freight moves.
+          </h2>
         </Reveal>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
           {EQUIPMENT.map((e) => (
             <Reveal key={e.name}>
-              <Card className="overflow-hidden transition hover:-translate-y-1 hover:border-gold-500 hover:shadow-lg">
-                <div className="relative aspect-[4/3] bg-slate-50">
+              <Card className="group overflow-hidden border border-slate-200 transition duration-300 hover:-translate-y-1.5 hover:border-gold-500 hover:shadow-xl">
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
                   <Image
                     src={e.image}
-                    alt={`${e.name} freight equipment illustration`}
+                    alt={`${e.name} freight transportation vehicle`}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
+                    className="object-cover transition duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute top-3 left-3 rounded-full bg-navy-950/80 px-3 py-1 text-[11px] font-bold tracking-wider text-gold-400 backdrop-blur-sm">
+                    ROAD READY
+                  </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-navy-900">{e.name}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-steel-600">{e.description}</p>
+                  <h3 className="text-xl font-bold text-navy-900 group-hover:text-gold-600 transition-colors">
+                    {e.name}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-steel-600">
+                    {e.description}
+                  </p>
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <Link
+                      href="/equipment"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-navy-900 hover:text-gold-600"
+                    >
+                      View Specs <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </Card>
             </Reveal>
@@ -204,16 +256,20 @@ export function EquipmentSection() {
 }
 
 export function WhySection() {
-  const icons = [ShieldCheck, CalendarCheck, PackageCheck, Users];
+  const icons = [ShieldCheck, CalendarCheck, PackageCheck, Truck];
   return (
     <section className="section bg-navy-950 text-white">
       <div className="container-site">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
             <Reveal>
-              <p className="eyebrow text-gold-400">Why Zewar</p>
-              <h2 className="section-title text-white">Built around reliability and communication.</h2>
-              <p className="mt-4 max-w-xl text-slate-300">
+              <p className="eyebrow !text-gold-400 font-bold tracking-[.2em]">
+                Why Zewar
+              </p>
+              <h2 className="section-title !text-white mt-3 font-bold tracking-tight">
+                Built around reliability and communication.
+              </h2>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-200">
                 From single-pallet urgent shipments to regional dedicated linehauls, Zewar pairs direct
                 dispatch coordination with modern tracking across every mile.
               </p>
@@ -223,7 +279,7 @@ export function WhySection() {
                 const Icon = icons[i % icons.length];
                 return (
                   <Reveal key={item}>
-                    <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-5 transition hover:bg-white/10 hover:border-gold-500/50">
                       <Icon className="h-6 w-6 text-gold-400" />
                       <h3 className="mt-3 text-base font-bold text-white">{item}</h3>
                       <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
@@ -277,8 +333,8 @@ export function HowItWorks() {
     <section className="section">
       <div className="container-site">
         <Reveal>
-          <p className="eyebrow">How it works</p>
-          <h2 className="section-title">A simple path from quote to delivery.</h2>
+          <p className="eyebrow text-steel-600">How it works</p>
+          <h2 className="section-title text-navy-900">A simple path from quote to delivery.</h2>
         </Reveal>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {steps.map((s) => (
@@ -324,8 +380,8 @@ export function FinalCta() {
         <div className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 md:p-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <p className="eyebrow">Ready to move freight?</p>
-              <h2 className="section-title">Get the shipment details in front of dispatch.</h2>
+              <p className="eyebrow text-steel-600">Ready to move freight?</p>
+              <h2 className="section-title text-navy-900">Get the shipment details in front of dispatch.</h2>
               <p className="mt-4 text-steel-600">
                 Use the quote form for a structured request, or call dispatch if timing is urgent.
               </p>
