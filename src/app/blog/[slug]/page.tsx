@@ -1,0 +1,4 @@
+import type { Metadata } from "next"; import { notFound } from "next/navigation"; import { BLOG_POSTS } from "@/lib/data/blog"; import { PageHero } from "@/components/shared/page-hero"; import { pageMetadata } from "@/lib/metadata";
+export function generateStaticParams(){return BLOG_POSTS.map(p=>({slug:p.slug}))}
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const p=BLOG_POSTS.find(x=>x.slug===slug);return p?pageMetadata(p.title,p.excerpt,`/blog/${p.slug}`):{}}
+export default async function Post({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const p=BLOG_POSTS.find(x=>x.slug===slug);if(!p)notFound();return <><PageHero eyebrow={p.date} title={p.title} description={p.excerpt}/><article className="section"><div className="container-site max-w-3xl space-y-6 text-lg leading-8 text-steel-600">{p.body.map(x=><p key={x}>{x}</p>)}</div></article></>}
