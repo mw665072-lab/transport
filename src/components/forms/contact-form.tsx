@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { contactSchema, CONTACT_SUBJECTS, type ContactValues } from "@/lib/schemas/contact";
 import { submitForm } from "@/lib/forms/submit";
 import { Field } from "@/components/forms/form-field";
+import { Honeypot } from "@/components/forms/honeypot";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -40,12 +41,12 @@ export function ContactForm() {
     resolver: zodResolver(contactSchema),
     mode: "onTouched",
     defaultValues: {
+      website: "",
       name: "",
       email: "",
       phone: "",
       subject: "New Shipment",
       message: "",
-      website: "",
     },
   });
 
@@ -203,11 +204,7 @@ export function ContactForm() {
           {...register("message")}
         />
       </Field>
-
-      <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-        <label htmlFor="website">Website</label>
-        <input id="website" tabIndex={-1} autoComplete="off" {...register("website")} />
-      </div>
+      <Honeypot id="website" register={register("website")} />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">

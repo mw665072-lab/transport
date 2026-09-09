@@ -14,6 +14,7 @@ import {
   type ApplicationValues,
 } from "@/lib/schemas/application";
 import { Field } from "@/components/forms/form-field";
+import { Honeypot } from "@/components/forms/honeypot";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,7 @@ export function ApplicationForm({
     resolver: zodResolver(applicationSchema),
     mode: "onTouched",
     defaultValues: {
+      website: "",
       jobSlug: jobSlug ?? "",
       name: "",
       email: "",
@@ -62,7 +64,6 @@ export function ApplicationForm({
       cdlClass: "None",
       linkedin: "",
       coverLetter: "",
-      website: "",
     },
   });
 
@@ -356,11 +357,7 @@ export function ApplicationForm({
           {...register("coverLetter")}
         />
       </Field>
-
-      <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-        <label htmlFor="app-website">Website</label>
-        <input id="app-website" tabIndex={-1} autoComplete="off" {...register("website")} />
-      </div>
+      <Honeypot id="app-website" register={register("website")} />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">

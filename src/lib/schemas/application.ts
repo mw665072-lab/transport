@@ -13,6 +13,9 @@ export const RESUME_EXTENSIONS = [".pdf", ".doc", ".docx"] as const;
 export const RESUME_ACCEPT = RESUME_EXTENSIONS.join(",");
 
 export const applicationSchema = z.object({
+  /** Spam trap. Accepted here so an autofilled value cannot block a real
+   * customer; the server schema is the one that rejects it. */
+  website: z.string().optional(), // honeypot
   jobSlug: z.string().trim().max(120).optional().or(z.literal("")),
   name: z.string().trim().min(2, "Enter your full name").max(80, "Name is too long"),
   email: z
@@ -50,8 +53,6 @@ export const applicationSchema = z.object({
     .max(3000, "Please keep this under 3000 characters")
     .optional()
     .or(z.literal("")),
-  website: z.string().max(0, "Leave this field empty"),
-  startedAt: z.number().int().optional(),
 });
 
 export type ApplicationValues = z.infer<typeof applicationSchema>;
@@ -62,3 +63,15 @@ export function formatBytes(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+/**
+ * What the API validates. The spam signals are carried but never rejected here:
+ * the route decides what to do with them, so a filled trap is accepted silently
+ * rather than returned as an error a real customer cannot see or fix.
+ */
+export const applicationServerSchema = applicationSchema.extend({
+  website: z.string().optional(),
+  startedAt: z.number().int().optional(),
+});
+
+export type ApplicationServerValues = z.infer<typeof applicationServerSchema>;

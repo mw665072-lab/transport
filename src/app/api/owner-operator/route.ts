@@ -1,4 +1,4 @@
-import { ownerOperatorSchema } from "@/lib/schemas/owner-operator";
+import { ownerOperatorServerSchema } from "@/lib/schemas/owner-operator";
 import { handleFormSubmission } from "@/lib/server/form-intake";
 
 export const runtime = "nodejs";
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   return handleFormSubmission({
     request,
-    schema: ownerOperatorSchema,
+    schema: ownerOperatorServerSchema,
     formName: "owner-operator",
     summarise: (data) => ({
       name: data.fullName,

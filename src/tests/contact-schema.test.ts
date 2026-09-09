@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contactSchema } from "@/lib/schemas/contact";
+import { contactSchema, contactServerSchema } from "@/lib/schemas/contact";
 
 const valid = {
   name: "Alex Rivera",
@@ -15,8 +15,18 @@ describe("contactSchema", () => {
     expect(contactSchema.safeParse(valid).success).toBe(true);
   });
 
-  it("rejects a filled honeypot", () => {
-    expect(contactSchema.safeParse({ ...valid, website: "http://spam" }).success).toBe(false);
+  it("does not block a filled honeypot in the browser", () => {
+    // A password manager can autofill the trap. Blocking here would strand a
+    // real customer on a form that silently refuses to submit.
+    expect(contactSchema.safeParse({ ...valid, website: "http://spam" }).success).toBe(true);
+  });
+
+  it("carries the honeypot to the server without rejecting it", () => {
+    // The route treats a filled trap as a silent accept, so validation must
+    // pass it through rather than turn it into an error the customer sees.
+    const result = contactServerSchema.safeParse({ ...valid, website: "http://spam" });
+    expect(result.success).toBe(true);
+    expect(result.success && result.data.website).toBe("http://spam");
   });
 
   it("rejects an invalid email", () => {

@@ -10,6 +10,7 @@ import { US_STATES } from "@/lib/us-states";
 import { SERVICES } from "@/lib/data/services";
 import { COMPANY } from "@/lib/data/company";
 import { Button } from "@/components/ui/button";
+import { Honeypot } from "@/components/forms/honeypot";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -23,7 +24,7 @@ import { Field, describedBy } from "@/components/forms/form-field";
 const stepFields: (keyof FreightQuoteValues)[][] = [
   ["pickupCity", "pickupState", "deliveryCity", "deliveryState", "pickupDate"],
   ["serviceType", "commodity", "weightLbs", "dimensions", "notes"],
-  ["fullName", "company", "email", "phone", "website"],
+  ["fullName", "company", "email", "phone"],
 ];
 export function FreightQuoteForm() {
   const [step, setStep] = useState(0);
@@ -43,6 +44,7 @@ export function FreightQuoteForm() {
   } = useForm<FreightQuoteValues>({
     resolver: zodResolver(freightQuoteSchema),
     defaultValues: {
+      website: "",
       pickupCity: "",
       pickupState: "CA",
       deliveryCity: "",
@@ -57,7 +59,6 @@ export function FreightQuoteForm() {
       company: "",
       email: "",
       phone: "",
-      website: "",
     },
   });
   const next = async () => {
@@ -264,13 +265,7 @@ export function FreightQuoteForm() {
               {...register("phone")}
             />
           </Field>
-          <div
-            aria-hidden="true"
-            className="absolute -left-[10000px] h-px w-px overflow-hidden"
-          >
-            <label htmlFor="website">Website</label>
-            <input id="website" tabIndex={-1} autoComplete="off" {...register("website")} />
-          </div>
+          <Honeypot id="website" register={register("website")} />
         </div>
       )}
       <div className="mt-8 flex items-center justify-between gap-3">

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import {
-  applicationSchema,
+  applicationServerSchema,
   RESUME_EXTENSIONS,
   RESUME_MAX_BYTES,
   RESUME_TYPES,
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     startedAt: form.get("startedAt") ? Number(form.get("startedAt")) : undefined,
   };
 
-  const parsed = applicationSchema.safeParse(raw);
+  const parsed = applicationServerSchema.safeParse(raw);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
@@ -70,7 +70,13 @@ export async function POST(request: Request) {
 
   const data = parsed.data;
 
-  if (typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS) {
+  // Silent accept for both spam signals: a bot gets no clue it was caught, and a
+  // customer whose password manager filled the hidden trap sees no error about a
+  // field they cannot see.
+  const tooFast =
+    typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS;
+  const trapFilled = typeof data.website === "string" && data.website.trim() !== "";
+  if (tooFast || trapFilled) {
     return NextResponse.json({ success: true, message: "Received." });
   }
 

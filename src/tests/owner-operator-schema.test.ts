@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ownerOperatorSchema } from "@/lib/schemas/owner-operator";
+import { ownerOperatorSchema, ownerOperatorServerSchema } from "@/lib/schemas/owner-operator";
 
 const valid = {
   fullName: "Marcus Reed",
@@ -19,8 +19,20 @@ describe("ownerOperatorSchema", () => {
     expect(ownerOperatorSchema.safeParse(valid).success).toBe(true);
   });
 
-  it("rejects a filled honeypot", () => {
-    expect(ownerOperatorSchema.safeParse({ ...valid, website: "spam" }).success).toBe(false);
+  it("does not block a filled honeypot in the browser", () => {
+    // A password manager can autofill the trap. Blocking here would strand a
+    // real customer on a form that silently refuses to submit.
+    expect(ownerOperatorSchema.safeParse({ ...valid, website: "http://spam" }).success).toBe(
+      true,
+    );
+  });
+
+  it("carries the honeypot to the server without rejecting it", () => {
+    // The route treats a filled trap as a silent accept, so validation must
+    // pass it through rather than turn it into an error the customer sees.
+    const result = ownerOperatorServerSchema.safeParse({ ...valid, website: "http://spam" });
+    expect(result.success).toBe(true);
+    expect(result.success && result.data.website).toBe("http://spam");
   });
 
   it("requires a usable phone number", () => {

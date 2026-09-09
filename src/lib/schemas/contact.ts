@@ -14,6 +14,9 @@ export const CONTACT_SUBJECTS = [
  * by a human for the submission to be accepted.
  */
 export const contactSchema = z.object({
+  /** Spam trap. Accepted here so an autofilled value cannot block a real
+   * customer; the server schema is the one that rejects it. */
+  website: z.string().optional(), // honeypot
   name: z.string().trim().min(2, "Enter your name").max(80, "Name is too long"),
   email: z
     .string()
@@ -34,8 +37,18 @@ export const contactSchema = z.object({
     .trim()
     .min(10, "Please add a little more detail")
     .max(2000, "Message must be under 2000 characters"),
-  website: z.string().max(0, "Leave this field empty"),
-  startedAt: z.number().int().optional(),
 });
 
 export type ContactValues = z.infer<typeof contactSchema>;
+
+/**
+ * What the API validates. The spam signals are carried but never rejected here:
+ * the route decides what to do with them, so a filled trap is accepted silently
+ * rather than returned as an error a real customer cannot see or fix.
+ */
+export const contactServerSchema = contactSchema.extend({
+  website: z.string().optional(),
+  startedAt: z.number().int().optional(),
+});
+
+export type ContactServerValues = z.infer<typeof contactServerSchema>;

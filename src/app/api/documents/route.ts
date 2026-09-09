@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  documentSchema,
+  documentServerSchema,
   DOC_EXTENSIONS,
   DOC_MAX_BYTES,
   DOC_TYPES,
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, message: GENERIC_ERROR }, { status: 400 });
   }
 
-  const parsed = documentSchema.safeParse({
+  const parsed = documentServerSchema.safeParse({
     reference: String(form.get("reference") ?? ""),
     company: String(form.get("company") ?? ""),
     contact: String(form.get("contact") ?? ""),
@@ -52,7 +52,13 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
-  if (typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS) {
+  // Silent accept for both spam signals: a bot gets no clue it was caught, and a
+  // customer whose password manager filled the hidden trap sees no error about a
+  // field they cannot see.
+  const tooFast =
+    typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS;
+  const trapFilled = typeof data.website === "string" && data.website.trim() !== "";
+  if (tooFast || trapFilled) {
     return NextResponse.json({ success: true, message: "Received." });
   }
 

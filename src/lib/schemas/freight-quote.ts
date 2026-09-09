@@ -5,6 +5,9 @@ import { SERVICES } from "@/lib/data/services";
 const today = () => new Date(new Date().setHours(0, 0, 0, 0));
 
 export const freightQuoteSchema = z.object({
+  /** Spam trap. Accepted here so an autofilled value cannot block a real
+   * customer; the server schema is the one that rejects it. */
+  website: z.string().optional(), // honeypot
   pickupCity: z.string().min(2, "Enter the pickup city"),
   pickupState: z.enum(US_STATES),
   deliveryCity: z.string().min(2, "Enter the delivery city"),
@@ -31,8 +34,18 @@ export const freightQuoteSchema = z.object({
     .trim()
     .regex(/^[+()\d\s.-]{10,}$/, "Enter a valid US phone number")
     .max(24, "Phone number is too long"),
-  website: z.string().max(0, "Leave this field empty"),
-  startedAt: z.number().int().optional(),
 });
 
 export type FreightQuoteValues = z.infer<typeof freightQuoteSchema>;
+
+/**
+ * What the API validates. The spam signals are carried but never rejected here:
+ * the route decides what to do with them, so a filled trap is accepted silently
+ * rather than returned as an error a real customer cannot see or fix.
+ */
+export const freightQuoteServerSchema = freightQuoteSchema.extend({
+  website: z.string().optional(),
+  startedAt: z.number().int().optional(),
+});
+
+export type FreightQuoteServerValues = z.infer<typeof freightQuoteServerSchema>;

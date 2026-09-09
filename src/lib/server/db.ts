@@ -47,7 +47,6 @@ function stamp(): string {
   return new Date().toISOString().replace("T", " ").slice(0, 19);
 }
 
-
 async function col<T extends Record<string, unknown>>(name: string) {
   await ensureIndexes();
   return collection<T>(name);

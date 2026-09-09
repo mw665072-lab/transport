@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { ownerOperatorSchema, type OwnerOperatorValues } from "@/lib/schemas/owner-operator";
 import { submitForm } from "@/lib/forms/submit";
 import { Field } from "@/components/forms/form-field";
+import { Honeypot } from "@/components/forms/honeypot";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ export function OwnerOperatorForm() {
   } = useForm<OwnerOperatorValues>({
     resolver: zodResolver(ownerOperatorSchema),
     defaultValues: {
+      website: "",
       fullName: "",
       email: "",
       phone: "",
@@ -44,7 +46,6 @@ export function OwnerOperatorForm() {
       mcNumber: "",
       preferredLanes: "",
       availability: "Immediately",
-      website: "",
     },
   });
   const onSubmit = async (v: OwnerOperatorValues) => {
@@ -170,10 +171,7 @@ export function OwnerOperatorForm() {
           />
         </Field>
       </div>
-      <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-        <label htmlFor="website">Website</label>
-        <input id="website" tabIndex={-1} autoComplete="off" {...register("website")} />
-      </div>
+      <Honeypot id="website" register={register("website")} />
       <Button type="submit" disabled={isSubmitting} className="w-fit">
         {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
         {isSubmitting ? "Sending…" : "Submit Details"}

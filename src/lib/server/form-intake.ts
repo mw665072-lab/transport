@@ -72,10 +72,20 @@ export async function handleFormSubmission<S extends z.ZodType>({
     );
   }
 
-  const data = parsed.data as z.infer<S> & { startedAt?: number };
+  const data = parsed.data as z.infer<S> & { startedAt?: number; website?: string };
 
-  // Accept obvious bots silently so they get no signal to retry differently.
-  if (typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS) {
+  // Accept obvious bots silently so they get no signal to retry differently, and
+  // so a customer whose password manager filled the hidden trap is never shown
+  // an error about a field they cannot see.
+  const tooFast =
+    typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS;
+  const trapFilled = typeof data.website === "string" && data.website.trim() !== "";
+  if (tooFast || trapFilled) {
+    // Logged so a false positive is discoverable: if a real enquiry ever trips
+    // the trap, there is a record of it rather than a silently lost lead.
+    console.warn(
+      `[${formName}] discarded as automated (${tooFast ? "too fast" : "honeypot filled"})`,
+    );
     return NextResponse.json({ success: true, message: "Received.", referenceId: reference() });
   }
 

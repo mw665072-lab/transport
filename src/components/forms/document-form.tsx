@@ -13,6 +13,7 @@ import {
 } from "@/lib/schemas/document";
 import { formatBytes } from "@/lib/schemas/application";
 import { Field } from "@/components/forms/form-field";
+import { Honeypot } from "@/components/forms/honeypot";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -37,13 +38,13 @@ export function DocumentForm() {
     resolver: zodResolver(documentSchema),
     mode: "onTouched",
     defaultValues: {
+      website: "",
       reference: "",
       company: "",
       contact: "",
       email: "",
       phone: "",
       note: "",
-      website: "",
     },
   });
 
@@ -293,11 +294,7 @@ export function DocumentForm() {
           {...register("note")}
         />
       </Field>
-
-      <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-        <label htmlFor="doc-website">Website</label>
-        <input id="doc-website" tabIndex={-1} autoComplete="off" {...register("website")} />
-      </div>
+      <Honeypot id="doc-website" register={register("website")} />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">

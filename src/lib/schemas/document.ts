@@ -7,6 +7,9 @@ export const DOC_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".png", ".heic"] as cons
 export const DOC_ACCEPT = DOC_EXTENSIONS.join(",");
 
 export const documentSchema = z.object({
+  /** Spam trap. Accepted here so an autofilled value cannot block a real
+   * customer; the server schema is the one that rejects it. */
+  website: z.string().optional(), // honeypot
   reference: z
     .string()
     .trim()
@@ -33,8 +36,18 @@ export const documentSchema = z.object({
     .max(1000, "Keep the note under 1000 characters")
     .optional()
     .or(z.literal("")),
-  website: z.string().max(0, "Leave this field empty"),
-  startedAt: z.number().int().optional(),
 });
 
 export type DocumentValues = z.infer<typeof documentSchema>;
+
+/**
+ * What the API validates. The spam signals are carried but never rejected here:
+ * the route decides what to do with them, so a filled trap is accepted silently
+ * rather than returned as an error a real customer cannot see or fix.
+ */
+export const documentServerSchema = documentSchema.extend({
+  website: z.string().optional(),
+  startedAt: z.number().int().optional(),
+});
+
+export type DocumentServerValues = z.infer<typeof documentServerSchema>;

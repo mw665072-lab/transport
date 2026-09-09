@@ -1,4 +1,4 @@
-import { freightQuoteSchema } from "@/lib/schemas/freight-quote";
+import { freightQuoteServerSchema } from "@/lib/schemas/freight-quote";
 import { handleFormSubmission } from "@/lib/server/form-intake";
 import { SERVICES } from "@/lib/data/services";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   return handleFormSubmission({
     request,
-    schema: freightQuoteSchema,
+    schema: freightQuoteServerSchema,
     formName: "freight-quote",
     summarise: (data) => {
       const service =

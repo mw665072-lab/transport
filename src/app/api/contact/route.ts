@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createHash, randomUUID } from "node:crypto";
-import { contactSchema } from "@/lib/schemas/contact";
+import { contactServerSchema } from "@/lib/schemas/contact";
 import { checkRateLimit } from "@/lib/server/rate-limit";
 import { insertSubmission, markEmailed } from "@/lib/server/db";
 import { mailerConfigured, sendContactEmail } from "@/lib/server/mailer";
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, message: GENERIC_ERROR }, { status: 400 });
   }
 
-  const parsed = contactSchema.safeParse(payload);
+  const parsed = contactServerSchema.safeParse(payload);
   if (!parsed.success) {
     // Field-level messages go back so the form can highlight the right input.
     const fieldErrors: Record<string, string> = {};
@@ -55,9 +55,13 @@ export async function POST(request: Request) {
   const data = parsed.data;
 
   // Silently accept obvious bots so they get no signal to retry differently.
+  // Silent accept for both spam signals: a bot gets no clue it was caught, and a
+  // customer whose password manager filled the hidden trap sees no error about a
+  // field they cannot see.
   const tooFast =
     typeof data.startedAt === "number" && Date.now() - data.startedAt < MIN_FILL_MS;
-  if (tooFast) {
+  const trapFilled = typeof data.website === "string" && data.website.trim() !== "";
+  if (tooFast || trapFilled) {
     return NextResponse.json({ success: true, message: "Received.", referenceId: reference() });
   }
 

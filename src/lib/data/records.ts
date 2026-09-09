@@ -157,4 +157,3 @@ export type DocumentRecord = {
 
 /** Kept for the callers that still import the old name. */
 export type Document = DocumentRecord;
-

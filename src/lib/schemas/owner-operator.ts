@@ -14,6 +14,9 @@ export const AVAILABILITY = ["Immediately", "Within 2 weeks", "Within a month"] 
  * `website` is a honeypot and `startedAt` is a time trap.
  */
 export const ownerOperatorSchema = z.object({
+  /** Spam trap. Accepted here so an autofilled value cannot block a real
+   * customer; the server schema is the one that rejects it. */
+  website: z.string().optional(), // honeypot
   fullName: z.string().trim().min(2, "Enter your full name").max(80, "Name is too long"),
   email: z
     .string()
@@ -42,8 +45,18 @@ export const ownerOperatorSchema = z.object({
     .optional()
     .or(z.literal("")),
   availability: z.enum(AVAILABILITY),
-  website: z.string().max(0, "Leave this field empty"),
-  startedAt: z.number().int().optional(),
 });
 
 export type OwnerOperatorValues = z.infer<typeof ownerOperatorSchema>;
+
+/**
+ * What the API validates. The spam signals are carried but never rejected here:
+ * the route decides what to do with them, so a filled trap is accepted silently
+ * rather than returned as an error a real customer cannot see or fix.
+ */
+export const ownerOperatorServerSchema = ownerOperatorSchema.extend({
+  website: z.string().optional(),
+  startedAt: z.number().int().optional(),
+});
+
+export type OwnerOperatorServerValues = z.infer<typeof ownerOperatorServerSchema>;

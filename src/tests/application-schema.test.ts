@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { applicationSchema, formatBytes } from "@/lib/schemas/application";
+import {
+  applicationSchema,
+  applicationServerSchema,
+  formatBytes,
+} from "@/lib/schemas/application";
 
 const valid = {
   jobSlug: "freight-dispatcher",
@@ -22,8 +26,20 @@ describe("applicationSchema", () => {
     expect(applicationSchema.safeParse({ ...valid, jobSlug: "" }).success).toBe(true);
   });
 
-  it("rejects a filled honeypot", () => {
-    expect(applicationSchema.safeParse({ ...valid, website: "spam" }).success).toBe(false);
+  it("does not block a filled honeypot in the browser", () => {
+    // A password manager can autofill the trap. Blocking here would strand a
+    // real customer on a form that silently refuses to submit.
+    expect(applicationSchema.safeParse({ ...valid, website: "http://spam" }).success).toBe(
+      true,
+    );
+  });
+
+  it("carries the honeypot to the server without rejecting it", () => {
+    // The route treats a filled trap as a silent accept, so validation must
+    // pass it through rather than turn it into an error the customer sees.
+    const result = applicationServerSchema.safeParse({ ...valid, website: "http://spam" });
+    expect(result.success).toBe(true);
+    expect(result.success && result.data.website).toBe("http://spam");
   });
 
   it("requires a usable phone number", () => {
