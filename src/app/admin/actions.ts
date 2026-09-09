@@ -357,9 +357,12 @@ export async function saveShipment(_prev: string | undefined, formData: FormData
   const id = rawId ? Number(rawId) : undefined;
 
   try {
+    const submissionId = Number(formData.get("submission_id"));
     await upsertShipment({
       id: Number.isInteger(id) && id ? id : undefined,
       reference,
+      // Set when the shipment was created from a quote, so the two stay linked.
+      submission_id: Number.isInteger(submissionId) && submissionId ? submissionId : null,
       status: String(formData.get("status") ?? "Booked") as ShipmentStatus,
       origin: String(formData.get("origin") ?? "").trim(),
       destination: String(formData.get("destination") ?? "").trim(),

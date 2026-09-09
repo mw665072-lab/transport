@@ -110,6 +110,7 @@ export async function handleFormSubmission<S extends z.ZodType>({
       subject: summary.subject,
       message: summary.message,
       payload: stored,
+      reference: referenceId,
       ipHash,
       userAgent: request.headers.get("user-agent")?.slice(0, 300) ?? null,
     });

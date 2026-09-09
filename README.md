@@ -218,3 +218,24 @@ with the browser's own schema, reject a filled honeypot, discard anything submit
 seconds, rate limit per hashed IP, store, then email. Forms with more fields than the shared
 columns keep their full data in the submission's `payload` JSON. Job applications send a
 notification through the same mailer.
+
+## From quote to tracked shipment
+
+A submission and a shipment are different things. A submission is what a visitor
+sent: a request, written by the website, that the team reads. A shipment is a load that is
+actually moving, created by an operator, and it is the only thing the public tracking page
+looks at.
+
+Accepting a quote used to mean retyping it, and the reference the customer was given on the
+enquiry did not work on the tracking page. Now:
+
+- Every submission stores the reference the customer was shown.
+- A freight quote in `/admin` carries a **Create shipment** button. It opens the shipment form
+  prefilled from the quote: route, service, pickup date, customer, and a note holding the
+  commodity, weight and dimensions.
+- The customer's original reference carries over, so the number they have had since the day
+  they enquired is the number that works at `/track`.
+- The shipment records which submission it came from, so the quote is marked **Shipment
+  created** and its button disappears. One quote cannot silently become two shipments.
+
+Contact and owner-operator submissions have no such button, because neither describes a load.

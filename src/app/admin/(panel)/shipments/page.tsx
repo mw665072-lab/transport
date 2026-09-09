@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PackageSearch } from "lucide-react";
-import { getShipmentById, listShipmentEvents, listShipments } from "@/lib/server/db";
+import {
+  getShipmentById,
+  getSubmission,
+  listShipmentEvents,
+  listShipments,
+} from "@/lib/server/db";
+import { draftFromSubmission } from "@/lib/server/quote-to-shipment";
 import { SHIPMENT_STATUSES } from "@/lib/data/shipment-status";
 import { addMilestone, removeShipment } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
@@ -29,12 +35,17 @@ function formatStamp(value: string) {
 export default async function AdminShipments({
   searchParams,
 }: {
-  searchParams: Promise<{ edit?: string; events?: string; page?: string }>;
+  searchParams: Promise<{ edit?: string; events?: string; from?: string; page?: string }>;
 }) {
-  const { edit, events, page } = await searchParams;
+  const { edit, events, from, page } = await searchParams;
   const editing = edit ? await getShipmentById(Number(edit)) : null;
   const eventsFor = events ? await getShipmentById(Number(events)) : null;
   const milestones = eventsFor ? await listShipmentEvents(eventsFor.id) : [];
+  // Arriving with ?from=<submission id> means an operator accepted a quote, so
+  // the form opens prefilled from it and keeps the customer's own reference.
+  const fromSubmission = from ? await getSubmission(Number(from)) : null;
+  const draft = fromSubmission ? await draftFromSubmission(fromSubmission) : null;
+
   const all = await listShipments();
   const view = paginate(all, parsePage(page));
 
@@ -46,11 +57,26 @@ export default async function AdminShipments({
         action={
           <FormModal
             triggerLabel="Add shipment"
-            title={editing ? `Edit: ${editing.reference}` : "Add a shipment"}
-            description="Customers look a shipment up by its reference. Only status, route, service and dates are shown publicly."
-            editing={Boolean(editing)}
+            title={
+              editing
+                ? `Edit: ${editing.reference}`
+                : draft
+                  ? `New shipment from ${fromSubmission?.name}'s quote`
+                  : "Add a shipment"
+            }
+            description={
+              draft
+                ? "Prefilled from the quote. The customer's original reference carries over, so the number they already have works on the tracking page."
+                : "Customers look a shipment up by its reference. Only status, route, service and dates are shown publicly."
+            }
+            editing={Boolean(editing) || Boolean(draft)}
           >
-            <ShipmentForm key={editing?.id ?? "new"} shipment={editing ?? undefined} />
+            <ShipmentForm
+              key={editing?.id ?? (draft ? `from-${from}` : "new")}
+              shipment={editing ?? undefined}
+              draft={draft ?? undefined}
+              submissionId={fromSubmission?.id}
+            />
           </FormModal>
         }
       />

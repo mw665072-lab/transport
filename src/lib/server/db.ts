@@ -65,6 +65,7 @@ export async function insertSubmission(input: {
   subject: string;
   message: string;
   payload?: Record<string, unknown> | null;
+  reference?: string | null;
   ipHash: string | null;
   userAgent: string | null;
 }): Promise<number> {
@@ -80,6 +81,7 @@ export async function insertSubmission(input: {
     message: input.message,
     status: "new",
     emailed: 0,
+    reference: input.reference ?? null,
     payload: input.payload ? JSON.stringify(input.payload) : null,
     ip_hash: input.ipHash,
     user_agent: input.userAgent,
@@ -545,4 +547,26 @@ export async function getDocument(id: number): Promise<DocumentRecord | null> {
 export async function setDocumentStatus(id: number, status: string): Promise<void> {
   const c = await col<DocumentRecord>("documents");
   await c.updateOne({ id } as never, { $set: { status } });
+}
+
+/** One submission, used to prefill a shipment created from a quote. */
+export async function getSubmission(id: number): Promise<Submission | null> {
+  const c = await col<Submission>("submissions");
+  return toPlain<Submission>(await c.findOne({ id } as never));
+}
+
+/** The shipment created from a given submission, if there is one. */
+export async function getShipmentBySubmission(submissionId: number): Promise<Shipment | null> {
+  const c = await col<Shipment>("shipments");
+  return toPlain<Shipment>(await c.findOne({ submission_id: submissionId } as never));
+}
+
+/** Submission ids that already have a shipment, for marking a list in one query. */
+export async function listLinkedSubmissionIds(): Promise<number[]> {
+  const c = await col<Shipment>("shipments");
+  const docs = await c
+    .find({ submission_id: { $ne: null } } as never)
+    .project({ submission_id: 1 })
+    .toArray();
+  return docs.map((d) => d.submission_id as number).filter((n) => typeof n === "number");
 }

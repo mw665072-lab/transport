@@ -10,7 +10,26 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
+/** Values carried over from a quote when a shipment is created from one. */
+export type ShipmentDraft = {
+  reference: string;
+  origin: string;
+  destination: string;
+  service: string;
+  customer: string;
+  pickupDate: string;
+  note: string;
+};
+
+export function ShipmentForm({
+  shipment,
+  draft,
+  submissionId,
+}: {
+  shipment?: Shipment;
+  draft?: ShipmentDraft;
+  submissionId?: number;
+}) {
   const [error, formAction, pending] = useActionState(saveShipment, undefined);
   const id = shipment?.id ?? "new";
 
@@ -27,6 +46,7 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
       )}
 
       {shipment && <input type="hidden" name="id" value={shipment.id} />}
+      {submissionId && <input type="hidden" name="submission_id" value={submissionId} />}
 
       <div className="grid gap-5 sm:grid-cols-3">
         <div>
@@ -34,7 +54,7 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
           <Input
             id={`reference-${id}`}
             name="reference"
-            defaultValue={shipment?.reference}
+            defaultValue={shipment?.reference ?? draft?.reference}
             placeholder="ZWR-A1B2C3D4"
             required
           />
@@ -59,7 +79,7 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
           <Input
             id={`service-${id}`}
             name="service"
-            defaultValue={shipment?.service}
+            defaultValue={shipment?.service ?? draft?.service}
             placeholder="Box Truck Transportation"
           />
         </div>
@@ -71,7 +91,7 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
           <Input
             id={`origin-${id}`}
             name="origin"
-            defaultValue={shipment?.origin}
+            defaultValue={shipment?.origin ?? draft?.origin}
             placeholder="Sacramento, CA"
           />
         </div>
@@ -80,13 +100,17 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
           <Input
             id={`destination-${id}`}
             name="destination"
-            defaultValue={shipment?.destination}
+            defaultValue={shipment?.destination ?? draft?.destination}
             placeholder="Reno, NV"
           />
         </div>
         <div>
           <Label htmlFor={`customer-${id}`}>Customer (internal)</Label>
-          <Input id={`customer-${id}`} name="customer" defaultValue={shipment?.customer} />
+          <Input
+            id={`customer-${id}`}
+            name="customer"
+            defaultValue={shipment?.customer ?? draft?.customer}
+          />
         </div>
       </div>
 
@@ -97,7 +121,7 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
             id={`pickup-${id}`}
             name="pickup_date"
             type="date"
-            defaultValue={shipment?.pickup_date}
+            defaultValue={shipment?.pickup_date ?? draft?.pickupDate}
           />
         </div>
         <div>
@@ -122,7 +146,12 @@ export function ShipmentForm({ shipment }: { shipment?: Shipment }) {
 
       <div>
         <Label htmlFor={`note-${id}`}>Internal note</Label>
-        <Textarea id={`note-${id}`} name="note" rows={2} defaultValue={shipment?.note} />
+        <Textarea
+          id={`note-${id}`}
+          name="note"
+          rows={2}
+          defaultValue={shipment?.note ?? draft?.note}
+        />
       </div>
 
       <Button type="submit" disabled={pending} className="w-fit">

@@ -23,6 +23,8 @@ export type Submission = {
   message: string;
   status: SubmissionStatus;
   emailed: number;
+  /** The reference shown to the customer when they submitted. */
+  reference: string | null;
   payload: string | null;
   ip_hash: string | null;
   user_agent: string | null;
@@ -113,6 +115,8 @@ export type Post = {
 export type Shipment = {
   id: number;
   reference: string;
+  /** Set when the shipment was created from a quote, so the two stay linked. */
+  submission_id: number | null;
   status: ShipmentStatus;
   origin: string;
   destination: string;

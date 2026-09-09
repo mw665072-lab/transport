@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { Inbox, Mail, MailCheck, MailWarning } from "lucide-react";
-import { countByStatus, listSubmissions, type SubmissionStatus } from "@/lib/server/db";
+import Link from "next/link";
+import { Inbox, Mail, MailCheck, MailWarning, Truck } from "lucide-react";
+import {
+  countByStatus,
+  listLinkedSubmissionIds,
+  listSubmissions,
+  type SubmissionStatus,
+} from "@/lib/server/db";
 import { updateStatus } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
 import { Pagination, paginate, parsePage } from "@/components/admin/pagination";
@@ -39,6 +45,8 @@ export default async function AdminPage({
   const all = await listSubmissions(filter);
   const view = paginate(all, parsePage(page));
   const counts = await countByStatus();
+  // One query marks which quotes have already been turned into a shipment.
+  const linked = new Set(await listLinkedSubmissionIds());
 
   const tiles = [
     { label: "Total", value: counts.total, icon: Inbox, href: "/admin" },
@@ -88,6 +96,11 @@ export default async function AdminPage({
                     >
                       {item.status}
                     </span>
+                    {item.form === "freight-quote" && linked.has(item.id) && (
+                      <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-emerald-700">
+                        Shipment created
+                      </span>
+                    )}
                     {item.emailed === 0 && (
                       <span className="rounded-full bg-danger/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-danger">
                         Not emailed
@@ -99,6 +112,15 @@ export default async function AdminPage({
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {/* Accepting a quote should not mean retyping it. */}
+                  {item.form === "freight-quote" && !linked.has(item.id) && (
+                    <Button asChild size="sm">
+                      <Link href={`/admin/shipments?from=${item.id}`}>
+                        <Truck aria-hidden="true" />
+                        Create shipment
+                      </Link>
+                    </Button>
+                  )}
                   {(["read", "archived", "new"] as const)
                     .filter((s) => s !== item.status)
                     .map((next) => (
