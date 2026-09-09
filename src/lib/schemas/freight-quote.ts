@@ -26,8 +26,13 @@ export const freightQuoteSchema = z.object({
   fullName: z.string().min(2, "Enter your name"),
   company: z.string().optional(),
   email: z.string().email("Enter a valid email"),
-  phone: z.string().regex(/^[+()\d\s.-]{10,}$/, "Enter a valid US phone number"),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^[+()\d\s.-]{10,}$/, "Enter a valid US phone number")
+    .max(24, "Phone number is too long"),
   website: z.string().max(0, "Leave this field empty"),
+  startedAt: z.number().int().optional(),
 });
 
 export type FreightQuoteValues = z.infer<typeof freightQuoteSchema>;

@@ -11,6 +11,9 @@ import {
   WhySection,
 } from "@/components/sections/home";
 import { pageMetadata } from "@/lib/metadata";
+import { QuickLinks } from "@/components/sections/quick-links";
+import { Testimonials } from "@/components/sections/testimonials";
+import { getTestimonials } from "@/lib/server/site-data";
 
 export const metadata: Metadata = pageMetadata(
   "Zewar Transport LLC | Road Freight Transportation",
@@ -18,7 +21,10 @@ export const metadata: Metadata = pageMetadata(
   "/",
 );
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const testimonials = await getTestimonials();
   return (
     <>
       <HomeHero />
@@ -28,6 +34,8 @@ export default function HomePage() {
       <EquipmentSection />
       <WhySection />
       <HowItWorks />
+      <Testimonials items={testimonials} />
+      <QuickLinks />
       <OwnerBand />
       <FinalCta />
     </>

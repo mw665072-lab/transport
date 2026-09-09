@@ -1,1 +1,0 @@
-export default function Loading(){return <div className="min-h-[70vh] bg-slate-50 pt-32"><div className="container-site"><div className="h-8 w-56 animate-pulse rounded bg-slate-200"/><div className="mt-6 h-48 animate-pulse rounded-2xl bg-slate-200"/></div></div>}

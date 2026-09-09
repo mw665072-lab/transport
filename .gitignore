@@ -34,3 +34,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# local submission database
+/data
+
+# local editor/tool config
+.claude/

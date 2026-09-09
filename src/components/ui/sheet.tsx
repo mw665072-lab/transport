@@ -1,4 +1,33 @@
 "use client";
-import * as Dialog from "@radix-ui/react-dialog"; import { X } from "lucide-react"; import { cn } from "@/lib/cn";
-export const Sheet = Dialog.Root; export const SheetTrigger = Dialog.Trigger; export const SheetClose = Dialog.Close;
-export function SheetContent({ className, children, ...props }: React.ComponentProps<typeof Dialog.Content>) { return <Dialog.Portal><Dialog.Overlay className="fixed inset-0 z-[90] bg-navy-950/60 backdrop-blur-sm"/><Dialog.Content className={cn("fixed right-0 top-0 z-[100] h-full w-[88%] max-w-sm overflow-y-auto bg-white p-5 shadow-2xl outline-none", className)} {...props}>{children}<Dialog.Close aria-label="Close navigation" className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full hover:bg-slate-50"><X className="h-5 w-5"/></Dialog.Close></Dialog.Content></Dialog.Portal> }
+import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import { cn } from "@/lib/cn";
+export const Sheet = Dialog.Root;
+export const SheetTrigger = Dialog.Trigger;
+export const SheetClose = Dialog.Close;
+export function SheetContent({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof Dialog.Content>) {
+  return (
+    <Dialog.Portal>
+      <Dialog.Overlay className="fixed inset-0 z-[90] bg-navy-950/60 backdrop-blur-sm" />
+      <Dialog.Content
+        className={cn(
+          "fixed right-0 top-0 z-[100] h-full w-[88%] max-w-sm overflow-y-auto bg-white p-5 shadow-2xl outline-none",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+        <Dialog.Close
+          aria-label="Close navigation"
+          className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full hover:bg-slate-50"
+        >
+          <X className="h-5 w-5" />
+        </Dialog.Close>
+      </Dialog.Content>
+    </Dialog.Portal>
+  );
+}

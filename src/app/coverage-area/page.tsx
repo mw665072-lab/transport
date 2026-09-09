@@ -11,7 +11,7 @@ export function generateMetadata(): Metadata {
   return pageMetadata(
     "Freight Coverage Area",
     "See Zewar Transport's stated California, Texas, Nevada, Virginia, and surrounding interstate road-freight coverage.",
-    "/coverage-area"
+    "/coverage-area",
   );
 }
 
@@ -64,9 +64,7 @@ export default function Coverage() {
               ))}
             </div>
 
-            <h3 className="mt-8 text-xl font-bold text-navy-900">
-              Primary Regional Corridors
-            </h3>
+            <h3 className="mt-8 text-xl font-bold text-navy-900">Primary Regional Corridors</h3>
             <div className="mt-4 space-y-2.5 text-steel-600">
               {COVERAGE.lanes.map((lane) => (
                 <div key={lane} className="flex items-center gap-2.5 text-sm">

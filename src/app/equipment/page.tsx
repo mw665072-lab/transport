@@ -1,3 +1,59 @@
-import type { Metadata } from "next"; import Image from "next/image"; import { PageHero } from "@/components/shared/page-hero"; import { EQUIPMENT, FLEET_DESCRIPTION } from "@/lib/data/equipment"; import { pageMetadata } from "@/lib/metadata"; import { Card } from "@/components/ui/card";
-export function generateMetadata():Metadata{return pageMetadata("Equipment & Fleet","See the cargo vans, Sprinter vans, and box trucks used for Zewar Transport road freight operations.","/equipment")}
-export default function Equipment(){return <><PageHero eyebrow="Equipment" title="Road-ready vans and box trucks." description={FLEET_DESCRIPTION}/><section className="section"><div className="container-site grid gap-6 lg:grid-cols-3">{EQUIPMENT.map(e=><Card key={e.name} className="overflow-hidden"><div className="relative aspect-[4/3] bg-slate-50"><Image src={e.image} alt={`${e.name} illustration`} fill sizes="(max-width:1024px) 100vw, 33vw" className="object-cover"/></div><div className="p-6"><h2 className="text-2xl font-bold text-navy-900">{e.name}</h2><p className="mt-3 text-sm leading-relaxed text-steel-600">{e.description}</p><dl className="mt-6 divide-y divide-slate-200 border-y border-slate-200">{e.specs.map(x=><div key={x.label} className="grid grid-cols-[.8fr_1.2fr] gap-4 py-3 text-sm"><dt className="font-semibold text-navy-900">{x.label}</dt><dd className="text-steel-600">{x.value}</dd></div>)}</dl></div></Card>)}</div></section></>}
+import type { Metadata } from "next";
+import Image from "next/image";
+import { PageHero } from "@/components/shared/page-hero";
+import { EQUIPMENT, FLEET_DESCRIPTION, SPEC_NOTE } from "@/lib/data/equipment";
+import { pageMetadata } from "@/lib/metadata";
+import { Card } from "@/components/ui/card";
+export function generateMetadata(): Metadata {
+  return pageMetadata(
+    "Equipment & Fleet",
+    "See the cargo vans, Sprinter vans, and box trucks used for Zewar Transport road freight operations.",
+    "/equipment",
+  );
+}
+export default function Equipment() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Equipment"
+        title="Road-ready vans and box trucks."
+        description={FLEET_DESCRIPTION}
+      />
+      <section className="section">
+        <div className="container-site grid gap-6 lg:grid-cols-3">
+          {EQUIPMENT.map((e) => (
+            <Card key={e.name} className="overflow-hidden">
+              <div className="relative aspect-[4/3] bg-slate-50">
+                <Image
+                  src={e.image}
+                  alt={`${e.name} illustration`}
+                  fill
+                  sizes="(max-width:1024px) 100vw, 33vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-navy-900">{e.name}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-steel-600">{e.description}</p>
+                <dl className="mt-6 divide-y divide-slate-200 border-y border-slate-200">
+                  {e.specs.map((x) => (
+                    <div
+                      key={x.label}
+                      className="grid grid-cols-[.8fr_1.2fr] gap-4 py-3 text-sm"
+                    >
+                      <dt className="font-semibold text-navy-900">{x.label}</dt>
+                      <dd className="text-steel-600">{x.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </Card>
+          ))}
+        </div>
+        <p className="container-site mt-10 max-w-3xl text-sm leading-relaxed text-steel-600">
+          {SPEC_NOTE}
+        </p>
+      </section>
+    </>
+  );
+}

@@ -1,0 +1,49 @@
+import { describe, expect, it } from "vitest";
+import { documentSchema, DOC_MAX_BYTES, DOC_EXTENSIONS } from "@/lib/schemas/document";
+
+const valid = {
+  reference: "ZWR-80ACE483",
+  company: "Cole Supply",
+  contact: "Dana Cole",
+  email: "dana@example.com",
+  phone: "+1 916 555 0134",
+  note: "Signed BOL for the Reno run.",
+  website: "",
+};
+
+describe("documentSchema", () => {
+  it("accepts a complete upload", () => {
+    expect(documentSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it("requires a load reference so dispatch can match it", () => {
+    expect(documentSchema.safeParse({ ...valid, reference: "" }).success).toBe(false);
+  });
+
+  it("rejects a filled honeypot", () => {
+    expect(documentSchema.safeParse({ ...valid, website: "spam" }).success).toBe(false);
+  });
+
+  it("rejects an invalid email", () => {
+    const result = documentSchema.safeParse({ ...valid, email: "nope" });
+    expect(result.success).toBe(false);
+    if (!result.success)
+      expect(result.error.issues[0].message).toBe("Enter a valid email address");
+  });
+
+  it("allows an empty phone but rejects a malformed one", () => {
+    expect(documentSchema.safeParse({ ...valid, phone: "" }).success).toBe(true);
+    expect(documentSchema.safeParse({ ...valid, phone: "abc" }).success).toBe(false);
+  });
+});
+
+describe("document upload limits", () => {
+  it("caps uploads at 10 MB", () => {
+    expect(DOC_MAX_BYTES).toBe(10 * 1024 * 1024);
+  });
+
+  it("allows only PDFs and photos, never executables", () => {
+    expect([...DOC_EXTENSIONS]).toEqual([".pdf", ".jpg", ".jpeg", ".png", ".heic"]);
+    expect(DOC_EXTENSIONS).not.toContain(".exe");
+  });
+});

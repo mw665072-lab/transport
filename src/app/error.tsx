@@ -1,2 +1,23 @@
-"use client"; import { Button } from "@/components/ui/button";
-export default function Error({reset}:{error:Error&{digest?:string};reset:()=>void}){return <section className="flex min-h-[75vh] items-center bg-navy-950 pt-20 text-white"><div className="container-site py-20"><h1 className="text-4xl font-bold">Something went wrong.</h1><p className="mt-4 text-slate-300">Please retry this page. If the issue continues, use the contact or phone options in the site footer.</p><Button className="mt-7" onClick={reset}>Try again</Button></div></section>}
+"use client";
+import { Button } from "@/components/ui/button";
+export default function Error({
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <section className="flex min-h-[75vh] items-center bg-navy-950 pt-20 text-white">
+      <div className="container-site py-20">
+        <h1 className="text-4xl font-bold">Something went wrong.</h1>
+        <p className="mt-4 text-slate-300">
+          Please retry this page. If the issue continues, use the contact or phone options in
+          the site footer.
+        </p>
+        <Button className="mt-7" onClick={reset}>
+          Try again
+        </Button>
+      </div>
+    </section>
+  );
+}

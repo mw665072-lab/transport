@@ -1,18 +1,143 @@
 @import "tailwindcss";
+
 @theme {
-  --color-navy-950: #050F2C; --color-navy-900: #081A43; --color-navy-800: #0F2A5F; --color-steel-600: #47617F; --color-gold-500: #F5A524; --color-gold-400: #FFBE4D; --color-slate-50: #F7F9FC; --color-danger: #DC2626;
-  --font-heading: var(--font-jakarta); --font-sans: var(--font-inter);
+  --color-navy-950: #050f2c;
+  --color-navy-900: #081a43;
+  --color-navy-800: #0f2a5f;
+  --color-steel-600: #47617f;
+  --color-gold-500: #f5a524;
+  --color-gold-400: #ffbe4d;
+  /* Accessible gold for text and hover states on light backgrounds:
+     5.04:1 on white, 4.78:1 on slate-50. gold-500 is 2.04:1 and is for
+     fills, icons, and accents only, never for text on a light surface. */
+  --color-gold-600: #9c6205;
+  --color-slate-50: #f7f9fc;
+  --color-danger: #dc2626;
+  --font-heading: var(--font-jakarta);
+  --font-sans: var(--font-inter);
 }
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; overflow-x: clip; background: white; color: #081A43; font-family: var(--font-inter), sans-serif; }
-h1,h2,h3,h4,h5,h6 { font-family: var(--font-jakarta), sans-serif; letter-spacing: -0.02em; }
-a,button,input,textarea,[role="button"] { -webkit-tap-highlight-color: transparent; }
-.container-site { width: min(100% - 2.5rem, 80rem); margin-inline: auto; }
-.section { padding-block: 4rem; }
-.section-title { margin-top: .5rem; max-width: 22ch; font-size: clamp(2rem,4vw,3.4rem); line-height: 1.05; font-weight: 700; color: inherit; }
-.eyebrow { font-size: .78rem; line-height: 1; font-weight: 800; text-transform: uppercase; letter-spacing: .18em; color: inherit; }
-.skip-link { position: fixed; left: 1rem; top: -5rem; z-index: 999; background: #F5A524; color:#050F2C; padding:.75rem 1rem; border-radius:.5rem; font-weight:700; }
-.skip-link:focus { top: 1rem; }
-@media (min-width:768px){ .section { padding-block: 6rem; } .container-site { width: min(100% - 4rem, 80rem); } }
-@media (prefers-reduced-motion:reduce){ *,*::before,*::after{ scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  overflow-x: clip;
+  background: white;
+  color: #081a43;
+  font-family: var(--font-inter), sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-jakarta), sans-serif;
+  letter-spacing: -0.02em;
+}
+a,
+button,
+input,
+textarea,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* These sit in the components layer so Tailwind utilities can override them
+   normally. Unlayered, they beat every utility and force `!important`. */
+@layer components {
+  .container-site {
+    width: min(100% - 2.5rem, 80rem);
+    margin-inline: auto;
+  }
+
+  /* Vertical rhythm for full sections: 64px mobile, 96px from md up. */
+  .section {
+    padding-block: 4rem;
+  }
+
+  /* Compact bands (trust strip, owner-operator CTA) sit at half rhythm. */
+  .band {
+    padding-block: 3rem;
+  }
+
+  .section-title {
+    margin-top: 0.5rem;
+    max-width: 22ch;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.05;
+    font-weight: 700;
+    color: inherit;
+    text-wrap: balance;
+  }
+
+  /* Secondary display size for band headings, so they share the section
+     hierarchy without competing with a full section title. */
+  .section-title-sm {
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 700;
+    color: inherit;
+    text-wrap: balance;
+  }
+
+  /* Standard gap and measure for the paragraph under a section title. */
+  .section-intro {
+    margin-top: 1.25rem;
+    max-width: 65ch;
+    line-height: 1.7;
+  }
+
+  .eyebrow {
+    font-size: 0.78rem;
+    line-height: 1;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: inherit;
+  }
+
+  .skip-link {
+    position: fixed;
+    left: 1rem;
+    top: -5rem;
+    z-index: 999;
+    background: #f5a524;
+    color: #050f2c;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  @layer components {
+    .section {
+      padding-block: 6rem;
+    }
+    .band {
+      padding-block: 4rem;
+    }
+    .container-site {
+      width: min(100% - 4rem, 80rem);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -14,23 +14,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/equipment",
     "/experience-authority",
     "/freight-quote",
+    "/track",
     "/career",
+    "/career/apply",
     "/owner-operator",
     "/contact",
     "/blog",
     "/privacy-policy",
     "/terms",
   ];
+  // lastModified is omitted where no real content date exists. Stamping the build
+  // time would tell crawlers every page changed on every deploy.
   return [
     ...staticRoutes.map((route) => ({
       url: `${COMPANY.domain}${route}`,
-      lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: route === "" ? 1 : route === "/freight-quote" ? 0.95 : 0.7,
     })),
     ...SERVICES.map((s) => ({
       url: `${COMPANY.domain}/services/${s.slug}`,
-      lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),

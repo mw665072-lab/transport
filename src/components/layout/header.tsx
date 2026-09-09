@@ -18,10 +18,9 @@ import {
   Boxes,
   Building2,
   MapPin,
-  Briefcase,
   ArrowRight,
 } from "lucide-react";
-import { NAV, type NavChild } from "@/lib/data/nav";
+import { NAV, type NavChild, type NavItem } from "@/lib/data/nav";
 import { COMPANY } from "@/lib/data/company";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -46,7 +45,6 @@ const companyIcons: Record<string, typeof Building2> = {
   "/coverage-area": MapPin,
   "/equipment": Truck,
   "/experience-authority": ShieldCheck,
-  "/career": Briefcase,
 };
 
 function getNavIcon(href: string, isServices: boolean) {
@@ -56,7 +54,7 @@ function getNavIcon(href: string, isServices: boolean) {
   return companyIcons[href] || Building2;
 }
 
-export function Header() {
+export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -77,9 +75,7 @@ export function Header() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-[70] h-16 transition-all duration-300 md:h-20",
-        solid
-          ? "bg-white/95 shadow-sm backdrop-blur-md"
-          : "bg-transparent"
+        solid ? "bg-white/95 shadow-sm backdrop-blur-md" : "bg-transparent",
       )}
     >
       <div className="container-site flex h-full items-center justify-between gap-4">
@@ -92,8 +88,8 @@ export function Header() {
           <Image
             src="/images/logo.png"
             alt="Zewar Transport LLC"
-            width={240}
-            height={160}
+            width={256}
+            height={256}
             priority
             className="h-12 w-auto object-contain drop-shadow-sm md:h-14"
           />
@@ -106,7 +102,7 @@ export function Header() {
           skipDelayDuration={200}
         >
           <NavigationMenu.List className="flex items-center gap-1">
-            {NAV.map((item) => {
+            {nav.map((item) => {
               const hasChildren = Boolean(item.children && item.children.length > 0);
 
               if (hasChildren && item.children) {
@@ -116,7 +112,7 @@ export function Header() {
                     <NavigationMenu.Trigger
                       className={cn(
                         "group flex min-h-11 items-center gap-1.5 rounded-lg px-3.5 text-sm font-semibold transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500",
-                        solid ? "text-navy-900 hover:bg-slate-100" : "text-white"
+                        solid ? "text-navy-900 hover:bg-slate-100" : "text-white",
                       )}
                     >
                       <span>{item.label}</span>
@@ -128,14 +124,11 @@ export function Header() {
                         "absolute top-full left-0 mt-2 rounded-2xl border border-slate-200/90 bg-white p-3 shadow-2xl duration-200",
                         "data-[motion=from-start]:animate-in data-[motion=from-start]:fade-in data-[motion=from-start]:slide-in-from-top-2",
                         "before:absolute before:-top-3 before:inset-x-0 before:h-3", // invisible hover bridge
-                        isServices ? "w-[620px]" : "w-[380px]"
+                        isServices ? "w-[620px]" : "w-[380px]",
                       )}
                     >
                       <div
-                        className={cn(
-                          "grid gap-3",
-                          isServices && "grid-cols-[1.25fr_.95fr]"
-                        )}
+                        className={cn("grid gap-3", isServices && "grid-cols-[1.25fr_.95fr]")}
                       >
                         <div>
                           <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-[.18em] text-steel-600">
@@ -180,7 +173,8 @@ export function Header() {
                                 Need a freight quote or fast booking?
                               </p>
                               <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                                Speak directly with our operations team for immediate lane coverage.
+                                Speak directly with our operations team for immediate lane
+                                coverage.
                               </p>
                               <a
                                 href={COMPANY.phoneHref}
@@ -212,7 +206,7 @@ export function Header() {
                         "relative flex min-h-11 items-center rounded-lg px-3.5 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500",
                         solid ? "text-navy-900 hover:bg-slate-100" : "text-white",
                         pathname === item.href &&
-                          "after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-0.5 after:bg-gold-500"
+                          "after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-0.5 after:bg-gold-500",
                       )}
                     >
                       {item.label}
@@ -233,7 +227,7 @@ export function Header() {
               "hidden xl:inline-flex font-semibold",
               solid
                 ? "border-navy-900 text-navy-900 hover:bg-slate-50"
-                : "border-white/80 text-white hover:bg-white/10 hover:text-white"
+                : "border-white/80 text-white hover:bg-white/10 hover:text-white",
             )}
           >
             <Link href="/owner-operator">For Owner Operator</Link>
@@ -249,7 +243,7 @@ export function Header() {
             <button
               className={cn(
                 "flex h-11 w-11 items-center justify-center rounded-lg lg:hidden transition",
-                solid ? "text-navy-900 hover:bg-slate-100" : "text-white hover:bg-white/10"
+                solid ? "text-navy-900 hover:bg-slate-100" : "text-white hover:bg-white/10",
               )}
               aria-label="Open navigation"
             >
@@ -261,14 +255,14 @@ export function Header() {
               <Image
                 src="/images/logo.png"
                 alt="Zewar Transport LLC"
-                width={180}
-                height={120}
+                width={256}
+                height={256}
                 className="h-12 w-auto object-contain drop-shadow-sm"
               />
             </div>
             <nav className="mt-8">
               <Accordion type="multiple">
-                {NAV.map((item) =>
+                {nav.map((item) =>
                   item.children ? (
                     <AccordionItem value={item.label} key={item.label}>
                       <AccordionTrigger className="text-base font-semibold text-navy-900">
@@ -296,7 +290,7 @@ export function Header() {
                     >
                       {item.label}
                     </Link>
-                  )
+                  ),
                 )}
               </Accordion>
             </nav>
