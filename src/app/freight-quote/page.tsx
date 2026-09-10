@@ -9,10 +9,9 @@ import {
   CARRIER_IDS,
   COMPANY,
 } from "@/lib/data/company";
-import { COVERAGE } from "@/lib/data/coverage";
-import { EQUIPMENT } from "@/lib/data/equipment";
+import { getCoverage, getEquipment } from "@/lib/server/fleet";
 import { Card } from "@/components/ui/card";
-import { FREIGHT_FAQ } from "@/lib/data/faq";
+import { buildFreightFaq } from "@/lib/data/faq";
 import {
   Accordion,
   AccordionContent,
@@ -27,11 +26,18 @@ export function generateMetadata(): Metadata {
     "/freight-quote",
   );
 }
-export default function Quote() {
+export const dynamic = "force-dynamic";
+
+export default async function Quote() {
+  const [coverage, equipment] = await Promise.all([getCoverage(), getEquipment()]);
+  const faq = buildFreightFaq(
+    coverage.states,
+    equipment.map((e) => e.name),
+  );
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FREIGHT_FAQ.map((x) => ({
+    mainEntity: faq.map((x) => ({
       "@type": "Question",
       name: x.question,
       acceptedAnswer: { "@type": "Answer", text: x.answer },
@@ -63,7 +69,7 @@ export default function Quote() {
                 <ShieldCheck className="h-6 w-6 text-gold-500" />
                 <h2 className="mt-3 text-xl font-bold">Trust & coverage</h2>
                 <p className="mt-2 text-sm leading-relaxed text-steel-600">
-                  {COVERAGE.states.join(" · ")}
+                  {coverage.states.join(" · ")}
                 </p>
                 <p className="mt-3 text-sm font-semibold">
                   {CARRIER_AUTHORITY_PUBLISHED ? CARRIER_IDS.join(" · ") : AUTHORITY_ON_REQUEST}
@@ -73,7 +79,7 @@ export default function Quote() {
                 <Truck className="h-6 w-6 text-gold-500" />
                 <h2 className="mt-3 text-xl font-bold">Equipment</h2>
                 <p className="mt-2 text-sm text-steel-600">
-                  {EQUIPMENT.map((e) => e.name).join(" · ")}
+                  {equipment.map((e) => e.name).join(" · ")}
                 </p>
               </Card>
             </div>
@@ -84,7 +90,7 @@ export default function Quote() {
         <div className="container-site max-w-4xl">
           <h2 className="section-title">Freight quote FAQ</h2>
           <Accordion type="single" collapsible className="mt-8">
-            {FREIGHT_FAQ.map((x, i) => (
+            {faq.map((x, i) => (
               <AccordionItem key={x.question} value={`q${i}`}>
                 <AccordionTrigger>{x.question}</AccordionTrigger>
                 <AccordionContent>{x.answer}</AccordionContent>

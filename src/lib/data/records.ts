@@ -89,6 +89,30 @@ export type ServiceItem = {
   sort_order: number;
 };
 
+export type EquipmentRow = {
+  id: number;
+  slug: string;
+  name: string;
+  image: string;
+  description: string;
+  /** Long-form copy for the vehicle's own page. */
+  body: string;
+  /** One "Label: value" pair per line. */
+  specs: string;
+  /** One item per line. */
+  typical_uses: string;
+  status: "published" | "hidden";
+  sort_order: number;
+};
+
+export type CoverageRow = {
+  id: number;
+  kind: "state" | "lane";
+  label: string;
+  status: "published" | "hidden";
+  sort_order: number;
+};
+
 export type Testimonial = {
   id: number;
   author: string;

@@ -20,8 +20,8 @@ import {
   CREDENTIALS,
   MISSION,
 } from "@/lib/data/company";
-import { COVERAGE } from "@/lib/data/coverage";
-import { EQUIPMENT } from "@/lib/data/equipment";
+import { getCoverage } from "@/lib/server/fleet";
+import { getEquipment } from "@/lib/server/fleet";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/reveal";
@@ -70,21 +70,21 @@ const transportPillars = [
   },
 ];
 
-const companyStats = [
+const buildStats = (coverage: { states: string[] }, equipment: { name: string }[]) => [
   {
     number: String(COMPANY.foundedYear),
     label: "Operating since",
     description: "Registered US road carrier providing regional and interstate freight",
   },
   {
-    number: `${COVERAGE.states.length}`,
+    number: `${coverage.states.length}`,
     label: "Core states",
-    description: COVERAGE.states.join(", ") + ", plus surrounding interstate regions",
+    description: coverage.states.join(", ") + ", plus surrounding interstate regions",
   },
   {
-    number: String(EQUIPMENT.length),
+    number: String(equipment.length),
     label: "Equipment classes",
-    description: EQUIPMENT.map((e) => e.name).join(", "),
+    description: equipment.map((e) => e.name).join(", "),
   },
   {
     number: "100%",
@@ -93,7 +93,11 @@ const companyStats = [
   },
 ];
 
-export default function About() {
+export const dynamic = "force-dynamic";
+
+export default async function About() {
+  const [coverage, equipment] = await Promise.all([getCoverage(), getEquipment()]);
+  const companyStats = buildStats(coverage, equipment);
   return (
     <>
       <PageHero

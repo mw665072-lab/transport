@@ -97,6 +97,9 @@ export function ensureIndexes(): Promise<void> {
       db.collection("shipment_events").createIndex({ shipment_id: 1, occurred_at: -1 }),
       db.collection("documents").createIndex({ created_at: -1 }),
       db.collection("site_settings").createIndex({ key: 1 }, { unique: true }),
+      db.collection("equipment").createIndex({ slug: 1 }, { unique: true }),
+      db.collection("equipment").createIndex({ sort_order: 1 }),
+      db.collection("coverage").createIndex({ kind: 1, sort_order: 1 }),
     ]);
   })();
   return indexesReady;

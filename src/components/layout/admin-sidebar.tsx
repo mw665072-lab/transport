@@ -11,11 +11,13 @@ import {
   Files,
   Inbox,
   Layers,
+  MapPin,
   Menu,
   MessageSquareQuote,
   Newspaper,
   PackageSearch,
   Settings,
+  Truck,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -41,6 +43,8 @@ const GROUPS = [
     label: "Website",
     links: [
       { href: "/admin/services", label: "Services", icon: Layers },
+      { href: "/admin/equipment", label: "Equipment", icon: Truck },
+      { href: "/admin/coverage", label: "Coverage", icon: MapPin },
       { href: "/admin/jobs", label: "Jobs", icon: FileText },
       { href: "/admin/posts", label: "News", icon: Newspaper },
       { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },

@@ -32,6 +32,11 @@ import {
   addShipmentEvent,
   deleteShipment,
   setDocumentStatus,
+  upsertEquipment,
+  setEquipmentStatus,
+  deleteEquipment,
+  upsertCoverage,
+  deleteCoverage,
   type PostStatus,
   type ShipmentStatus,
 } from "@/lib/server/db";
@@ -412,4 +417,90 @@ export async function updateDocumentStatus(formData: FormData) {
   if (!Number.isInteger(id) || !["new", "matched", "archived"].includes(status)) return;
   await setDocumentStatus(id, status);
   revalidatePath("/admin/documents");
+}
+
+export async function saveEquipment(_prev: string | undefined, formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return "The equipment name is required.";
+  const slug = slugify(String(formData.get("slug") ?? "") || name);
+  if (!slug) return "Could not build a URL from that name. Add a slug manually.";
+
+  const rawId = formData.get("id");
+  const id = rawId ? Number(rawId) : undefined;
+
+  try {
+    await upsertEquipment({
+      id: Number.isInteger(id) && id ? id : undefined,
+      slug,
+      name,
+      image: String(formData.get("image") ?? "").trim() || "/images/box-truck.jpg",
+      description: String(formData.get("description") ?? "").trim(),
+      body: String(formData.get("body") ?? "").trim(),
+      specs: String(formData.get("specs") ?? "").trim(),
+      typical_uses: String(formData.get("typical_uses") ?? "").trim(),
+      status: formData.get("status") === "published" ? "published" : "hidden",
+      sort_order: Number(formData.get("sort_order") ?? 0) || 0,
+    });
+  } catch (cause) {
+    console.error("[admin] could not save equipment", cause);
+    const duplicate =
+      typeof cause === "object" &&
+      cause !== null &&
+      (cause as { code?: number }).code === 11000;
+    return duplicate
+      ? "That URL slug is already used by another vehicle. Choose a different one."
+      : "Could not save the vehicle. Check the database connection and try again.";
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/admin/equipment");
+}
+
+export async function toggleEquipment(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  const status = String(formData.get("status"));
+  if (!Number.isInteger(id) || !["published", "hidden"].includes(status)) return;
+  await setEquipmentStatus(id, status as "published" | "hidden");
+  revalidatePath("/", "layout");
+}
+
+export async function removeEquipment(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await deleteEquipment(id);
+  revalidatePath("/", "layout");
+}
+
+export async function saveCoverage(_prev: string | undefined, formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+
+  const label = String(formData.get("label") ?? "").trim();
+  if (!label) return "Enter a state or lane.";
+  const kind = formData.get("kind") === "lane" ? "lane" : "state";
+  const rawId = formData.get("id");
+  const id = rawId ? Number(rawId) : undefined;
+
+  await upsertCoverage({
+    id: Number.isInteger(id) && id ? id : undefined,
+    kind,
+    label,
+    // Unticking the checkbox omits the field entirely, so absence means hidden.
+    status: formData.get("status") === "published" ? "published" : "hidden",
+    sort_order: Number(formData.get("sort_order") ?? 0) || 0,
+  });
+
+  revalidatePath("/", "layout");
+  redirect("/admin/coverage");
+}
+
+export async function removeCoverage(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await deleteCoverage(id);
+  revalidatePath("/", "layout");
 }

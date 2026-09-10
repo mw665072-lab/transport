@@ -15,13 +15,13 @@ import {
   CREDENTIALS,
 } from "@/lib/data/company";
 import { SERVICES } from "@/lib/data/services";
-import { COVERAGE } from "@/lib/data/coverage";
-import { EQUIPMENT } from "@/lib/data/equipment";
+import type { PublicCoverage, PublicEquipment } from "@/lib/server/fleet";
+import { listStates, stateAbbreviation } from "@/lib/data/us-states";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/shared/reveal";
 
-export function HomeHero() {
+export function HomeHero({ states }: { states: string[] }) {
   return (
     <section className="relative overflow-hidden bg-navy-950 pt-16 text-white md:pt-20">
       <Image
@@ -42,8 +42,8 @@ export function HomeHero() {
             Freight You Can Track. Delivery You Can Trust.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-200 md:text-lg">
-            Reliable freight transportation across California, Texas, Nevada, Virginia, and
-            surrounding interstate regions using road-ready vans and box trucks.
+            Reliable freight transportation across {listStates(states)}, and surrounding
+            interstate regions using road-ready vans and box trucks.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button size="lg" asChild>
@@ -145,7 +145,7 @@ export function ServicesSection() {
   );
 }
 
-export function CoverageSection() {
+export function CoverageSection({ coverage }: { coverage: PublicCoverage }) {
   return (
     <section className="section bg-slate-50">
       <div className="container-site grid items-center gap-12 lg:grid-cols-2">
@@ -157,7 +157,7 @@ export function CoverageSection() {
             regions handled according to driver, lane, and equipment availability.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
-            {COVERAGE.states.map((s) => (
+            {coverage.states.map((s) => (
               <span
                 key={s}
                 className="rounded-full bg-gold-500 px-4 py-2 text-sm font-bold text-navy-950 shadow-sm"
@@ -168,7 +168,7 @@ export function CoverageSection() {
           </div>
           <div className="mt-6 space-y-2 text-sm text-steel-600">
             <p className="font-semibold text-navy-900">Key Operating Lanes:</p>
-            {COVERAGE.lanes.map((lane) => (
+            {coverage.lanes.map((lane) => (
               <div key={lane} className="flex items-center gap-2 text-xs md:text-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-gold-500" />
                 <span>{lane}</span>
@@ -187,7 +187,7 @@ export function CoverageSection() {
             <div className="relative aspect-[4/3] w-full">
               <Image
                 src="/images/us-coverage-map.jpg"
-                alt="Zewar Transport US freight routes and coverage map connecting California, Nevada, Texas, and Virginia"
+                alt={`Zewar Transport US freight routes and coverage map connecting ${listStates(coverage.states)}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -203,7 +203,9 @@ export function CoverageSection() {
                   </span>
                   <span className="text-white font-semibold">Active Transit Corridors</span>
                 </div>
-                <span className="font-bold text-gold-400">CA · NV · TX · VA + Interstate</span>
+                <span className="font-bold text-gold-400">
+                  {coverage.states.map(stateAbbreviation).join(" · ")} + Interstate
+                </span>
               </div>
             </div>
           </div>
@@ -213,7 +215,7 @@ export function CoverageSection() {
   );
 }
 
-export function EquipmentSection() {
+export function EquipmentSection({ equipment }: { equipment: PublicEquipment[] }) {
   return (
     <section className="section">
       <div className="container-site">
@@ -224,8 +226,8 @@ export function EquipmentSection() {
           </h2>
         </Reveal>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {EQUIPMENT.map((e) => (
-            <Reveal key={e.name}>
+          {equipment.map((e) => (
+            <Reveal key={e.slug}>
               <Card className="group flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-gold-500 hover:shadow-lg">
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
                   <Image
@@ -246,7 +248,7 @@ export function EquipmentSection() {
                   <p className="mt-3 text-sm leading-relaxed text-steel-600">{e.description}</p>
                   <div className="mt-auto border-t border-slate-100 pt-3">
                     <Link
-                      href="/equipment"
+                      href={`/equipment/${e.slug}`}
                       className="inline-flex items-center gap-1.5 rounded-sm py-1.5 text-xs font-bold uppercase tracking-wider text-navy-900 transition-colors hover:text-gold-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2"
                     >
                       View Specs <ArrowRight className="h-3.5 w-3.5" />

@@ -5,6 +5,8 @@ import type { ShipmentStatus } from "@/lib/data/shipment-status";
 export type { ShipmentStatus } from "@/lib/data/shipment-status";
 
 export type {
+  EquipmentRow,
+  CoverageRow,
   SubmissionStatus,
   JobStatus,
   ApplicationStatus,
@@ -33,6 +35,8 @@ import type {
   Application,
   ServiceRow,
   ServiceItem,
+  EquipmentRow,
+  CoverageRow,
   Testimonial,
   Post,
   Shipment,
@@ -568,4 +572,87 @@ export async function listLinkedSubmissionIds(): Promise<number[]> {
     .project({ submission_id: 1 })
     .toArray();
   return docs.map((d) => d.submission_id as number).filter((n) => typeof n === "number");
+}
+
+/* ----------------------------------------------------------- equipment */
+
+export async function listEquipment(
+  opts: { includeHidden?: boolean } = {},
+): Promise<EquipmentRow[]> {
+  const c = await col<EquipmentRow>("equipment");
+  const docs = await c
+    .find(opts.includeHidden ? ({} as never) : ({ status: "published" } as never))
+    .sort({ sort_order: 1, id: 1 })
+    .toArray();
+  return toPlainAll<EquipmentRow>(docs);
+}
+
+export async function getEquipmentBySlug(slug: string): Promise<EquipmentRow | null> {
+  const c = await col<EquipmentRow>("equipment");
+  return toPlain<EquipmentRow>(await c.findOne({ slug } as never));
+}
+
+export async function getEquipmentById(id: number): Promise<EquipmentRow | null> {
+  const c = await col<EquipmentRow>("equipment");
+  return toPlain<EquipmentRow>(await c.findOne({ id } as never));
+}
+
+export async function upsertEquipment(
+  item: Omit<EquipmentRow, "id"> & { id?: number },
+): Promise<void> {
+  const c = await col<EquipmentRow>("equipment");
+  if (item.id) {
+    const { id, ...rest } = item;
+    await c.updateOne({ id } as never, { $set: rest as never });
+    return;
+  }
+  await c.insertOne({ ...item, id: await nextId("equipment") } as never);
+}
+
+export async function setEquipmentStatus(
+  id: number,
+  status: "published" | "hidden",
+): Promise<void> {
+  const c = await col<EquipmentRow>("equipment");
+  await c.updateOne({ id } as never, { $set: { status } });
+}
+
+export async function deleteEquipment(id: number): Promise<void> {
+  const c = await col<EquipmentRow>("equipment");
+  await c.deleteOne({ id } as never);
+}
+
+/* ------------------------------------------------------------ coverage */
+
+export async function listCoverage(
+  opts: { includeHidden?: boolean } = {},
+): Promise<CoverageRow[]> {
+  const c = await col<CoverageRow>("coverage");
+  const docs = await c
+    .find(opts.includeHidden ? ({} as never) : ({ status: "published" } as never))
+    .sort({ kind: 1, sort_order: 1, id: 1 })
+    .toArray();
+  return toPlainAll<CoverageRow>(docs);
+}
+
+export async function getCoverageById(id: number): Promise<CoverageRow | null> {
+  const c = await col<CoverageRow>("coverage");
+  return toPlain<CoverageRow>(await c.findOne({ id } as never));
+}
+
+export async function upsertCoverage(
+  row: Omit<CoverageRow, "id"> & { id?: number },
+): Promise<void> {
+  const c = await col<CoverageRow>("coverage");
+  if (row.id) {
+    const { id, ...rest } = row;
+    await c.updateOne({ id } as never, { $set: rest as never });
+    return;
+  }
+  await c.insertOne({ ...row, id: await nextId("coverage") } as never);
+}
+
+export async function deleteCoverage(id: number): Promise<void> {
+  const c = await col<CoverageRow>("coverage");
+  await c.deleteOne({ id } as never);
 }

@@ -10,6 +10,9 @@ import { listJobs } from "@/lib/server/db";
 import { COMPANY } from "@/lib/data/company";
 
 // Openings are edited in the admin panel, so this page is never cached.
+import { getCoverage, getEquipment } from "@/lib/server/fleet";
+import { listStates } from "@/lib/data/us-states";
+
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
@@ -21,18 +24,16 @@ export function generateMetadata(): Metadata {
 }
 
 /** Grounded in how the company already describes itself; no invented benefits. */
-const WORKING_HERE = [
+const buildWorkingHere = (states: string[], equipmentNames: string[]) => [
   {
     icon: Route,
     title: "Defined lanes",
-    description:
-      "Work runs across California, Texas, Nevada, and Virginia plus surrounding interstate regions, so routes are predictable rather than open-ended.",
+    description: `Work runs across ${listStates(states)} plus surrounding interstate regions, so routes are predictable rather than open-ended.`,
   },
   {
     icon: Truck,
     title: "Road-ready equipment",
-    description:
-      "Cargo vans, Sprinter vans, box trucks, and hotshot capacity are maintained for regional and interstate operations.",
+    description: `${listStates(equipmentNames)} are maintained for regional and interstate operations.`,
   },
   {
     icon: HeartHandshake,
@@ -49,7 +50,15 @@ const WORKING_HERE = [
 ];
 
 export default async function Career() {
-  const jobs = await listJobs();
+  const [jobs, coverage, equipment] = await Promise.all([
+    listJobs(),
+    getCoverage(),
+    getEquipment(),
+  ]);
+  const workingHere = buildWorkingHere(
+    coverage.states,
+    equipment.map((e) => e.name),
+  );
   const cards: JobCard[] = jobs.map(
     ({
       slug,
@@ -134,7 +143,7 @@ export default async function Career() {
           <h2 className="section-title text-navy-900">What the work actually looks like.</h2>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {WORKING_HERE.map((item) => (
+            {workingHere.map((item) => (
               <Card key={item.title} className="h-full p-6">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold-500/10 text-gold-600">
                   <item.icon className="h-5 w-5" aria-hidden="true" />

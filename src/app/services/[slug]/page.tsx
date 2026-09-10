@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2, ChevronRight } from "lucide-react";
 import { getService, getServices, getServiceItems } from "@/lib/server/services";
-import { COVERAGE } from "@/lib/data/coverage";
+import { getCoverage } from "@/lib/server/fleet";
 import { pageMetadata } from "@/lib/metadata";
 import { PageHero } from "@/components/shared/page-hero";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const s = await getService(slug);
   if (!s) notFound();
+  const coverage = await getCoverage();
   const others = (await getServices()).filter((service) => service.slug !== slug);
   const items = (await getServiceItems(slug)).map(
     ({ id, category, title, description, image }) => ({
@@ -46,7 +47,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       telephone: COMPANY.phone,
       naics: NAICS_TRUCK_TRANSPORTATION,
     },
-    areaServed: COVERAGE.states.map((state) => ({ "@type": "State", name: state })),
+    areaServed: coverage.states.map((state) => ({ "@type": "State", name: state })),
     description: s.short,
   };
   const crumbs = {
@@ -102,7 +103,18 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <div className="container-site grid gap-10 lg:grid-cols-[1.1fr_.9fr]">
           <div>
             <h2 className="text-3xl font-bold text-navy-900">Service overview</h2>
-            <p className="mt-5 max-w-[70ch] leading-8 text-steel-600">{s.body}</p>
+            {/* Blank lines in the admin textarea become separate paragraphs. */}
+            <div className="mt-5 max-w-[70ch] space-y-5">
+              {s.body
+                .split(/\n\s*\n/)
+                .map((para) => para.trim())
+                .filter(Boolean)
+                .map((para) => (
+                  <p key={para.slice(0, 40)} className="leading-8 text-steel-600">
+                    {para}
+                  </p>
+                ))}
+            </div>
             <h2 className="mt-10 text-2xl font-bold text-navy-900">Typical load types</h2>
             <ul className="mt-5 space-y-3">
               {s.typicalLoads.map((x) => (
