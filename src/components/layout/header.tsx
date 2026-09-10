@@ -111,7 +111,8 @@ export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
                   <NavigationMenu.Item key={item.label} className="relative">
                     <NavigationMenu.Trigger
                       className={cn(
-                        "group flex min-h-11 items-center gap-1.5 rounded-lg px-3.5 text-sm font-semibold transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500",
+                        // Slightly tighter at lg, where the nav and both CTAs are closest.
+                        "group flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 xl:px-3.5",
                         solid ? "text-navy-900 hover:bg-slate-100" : "text-white",
                       )}
                     >
@@ -203,10 +204,10 @@ export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
                     <Link
                       href={item.href}
                       className={cn(
-                        "relative flex min-h-11 items-center rounded-lg px-3.5 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500",
+                        "relative flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 xl:px-3.5",
                         solid ? "text-navy-900 hover:bg-slate-100" : "text-white",
                         pathname === item.href &&
-                          "after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-0.5 after:bg-gold-500",
+                          "after:absolute after:inset-x-3 after:bottom-1.5 after:h-0.5 after:bg-gold-500 xl:after:inset-x-3.5",
                       )}
                     >
                       {item.label}
@@ -218,13 +219,15 @@ export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
           </NavigationMenu.List>
         </NavigationMenu.Root>
 
-        {/* Right Action CTAs */}
-        <div className="hidden items-center gap-2 md:flex">
+        {/* Right actions. The menu button lives in here too: with it as a
+            separate flex child, `justify-between` pushed the CTAs into the
+            middle of the bar on tablets, where the desktop nav is hidden. */}
+        <div className="flex shrink-0 items-center gap-2">
           <Button
             variant="outline"
             asChild
             className={cn(
-              "hidden xl:inline-flex font-semibold",
+              "hidden md:inline-flex font-semibold",
               solid
                 ? "border-navy-900 text-navy-900 hover:bg-slate-50"
                 : "border-white/80 text-white hover:bg-white/10 hover:text-white",
@@ -232,96 +235,96 @@ export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
           >
             <Link href="/owner-operator">For Owner Operator</Link>
           </Button>
-          <Button asChild className="font-semibold shadow-md">
+          <Button asChild className="hidden md:inline-flex font-semibold shadow-md">
             <Link href="/freight-quote">Get a Quote</Link>
           </Button>
-        </div>
 
-        {/* Mobile Navigation Sheet */}
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <button
-              className={cn(
-                "flex h-11 w-11 items-center justify-center rounded-lg lg:hidden transition",
-                solid ? "text-navy-900 hover:bg-slate-100" : "text-white hover:bg-white/10",
-              )}
-              aria-label="Open navigation"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-          </SheetTrigger>
-          <SheetContent>
-            <div className="pr-12">
-              <Image
-                src="/images/logo.png"
-                alt="Zewar Transport LLC"
-                width={256}
-                height={256}
-                className="h-12 w-auto object-contain drop-shadow-sm"
-              />
-            </div>
-            <nav className="mt-8">
-              <Accordion type="multiple">
-                {nav.map((item) =>
-                  item.children ? (
-                    <AccordionItem value={item.label} key={item.label}>
-                      <AccordionTrigger className="text-base font-semibold text-navy-900">
-                        {item.label}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-1 pl-2">
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-navy-900 hover:bg-slate-50"
-                            >
-                              {child.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ) : (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="flex min-h-12 items-center border-b border-slate-200 font-semibold text-navy-900"
-                    >
-                      {item.label}
-                    </Link>
-                  ),
+          {/* Mobile Navigation Sheet */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <button
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-lg lg:hidden transition",
+                  solid ? "text-navy-900 hover:bg-slate-100" : "text-white hover:bg-white/10",
                 )}
-              </Accordion>
-            </nav>
-            <div className="mt-6 space-y-3 border-t border-slate-200 pt-6">
-              <Button asChild className="w-full">
-                <Link href="/freight-quote">Get a Quote</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="w-full border-navy-900 text-navy-900"
+                aria-label="Open navigation"
               >
-                <Link href="/owner-operator">For Owner Operator</Link>
-              </Button>
-              <a
-                href={COMPANY.phoneHref}
-                className="flex min-h-11 items-center gap-3 text-sm font-medium text-navy-900"
-              >
-                <Phone className="h-5 w-5 text-gold-500" />
-                {COMPANY.phone}
-              </a>
-              <a
-                href={`mailto:${COMPANY.email}`}
-                className="flex min-h-11 items-center gap-3 text-sm font-medium text-navy-900"
-              >
-                <Mail className="h-5 w-5 text-gold-500" />
-                {COMPANY.email}
-              </a>
-            </div>
-          </SheetContent>
-        </Sheet>
+                <Menu className="h-6 w-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent>
+              <div className="pr-12">
+                <Image
+                  src="/images/logo.png"
+                  alt="Zewar Transport LLC"
+                  width={256}
+                  height={256}
+                  className="h-12 w-auto object-contain drop-shadow-sm"
+                />
+              </div>
+              <nav className="mt-8">
+                <Accordion type="multiple">
+                  {nav.map((item) =>
+                    item.children ? (
+                      <AccordionItem value={item.label} key={item.label}>
+                        <AccordionTrigger className="text-base font-semibold text-navy-900">
+                          {item.label}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-1 pl-2">
+                            {item.children.map((child) => (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-navy-900 hover:bg-slate-50"
+                              >
+                                {child.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ) : (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex min-h-12 items-center border-b border-slate-200 font-semibold text-navy-900"
+                      >
+                        {item.label}
+                      </Link>
+                    ),
+                  )}
+                </Accordion>
+              </nav>
+              <div className="mt-6 space-y-3 border-t border-slate-200 pt-6">
+                <Button asChild className="w-full">
+                  <Link href="/freight-quote">Get a Quote</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full border-navy-900 text-navy-900"
+                >
+                  <Link href="/owner-operator">For Owner Operator</Link>
+                </Button>
+                <a
+                  href={COMPANY.phoneHref}
+                  className="flex min-h-11 items-center gap-3 text-sm font-medium text-navy-900"
+                >
+                  <Phone className="h-5 w-5 text-gold-500" />
+                  {COMPANY.phone}
+                </a>
+                <a
+                  href={`mailto:${COMPANY.email}`}
+                  className="flex min-h-11 items-center gap-3 text-sm font-medium text-navy-900"
+                >
+                  <Mail className="h-5 w-5 text-gold-500" />
+                  {COMPANY.email}
+                </a>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

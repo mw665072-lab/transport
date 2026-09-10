@@ -5,6 +5,7 @@ import { getPostById, listPosts } from "@/lib/server/db";
 import { removePost } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
 import { FormModal } from "@/components/admin/form-modal";
+import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { Pagination, paginate, parsePage } from "@/components/admin/pagination";
 import { PostForm } from "@/app/admin/(panel)/posts/post-form";
 import { Button } from "@/components/ui/button";
@@ -95,9 +96,7 @@ export default async function AdminPosts({
                   )}
                   <form action={removePost}>
                     <input type="hidden" name="id" value={post.id} />
-                    <Button type="submit" size="sm" variant="ghost" className="text-danger">
-                      Delete
-                    </Button>
+                    <ConfirmSubmit recordKind="article" recordName={post.title} />
                   </form>
                 </div>
               </div>

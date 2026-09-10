@@ -5,6 +5,7 @@ import { getServiceById, listServices, listServiceItems } from "@/lib/server/db"
 import { removeService, removeServiceItem, toggleService } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
 import { FormModal } from "@/components/admin/form-modal";
+import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { Pagination, paginate, parsePage } from "@/components/admin/pagination";
 import { ServiceForm } from "@/app/admin/(panel)/services/service-form";
 import { ItemForm } from "@/app/admin/(panel)/services/item-form";
@@ -60,9 +61,11 @@ export default async function AdminServices({
                 <ItemForm serviceId={itemsFor.id} item={item} />
                 <form action={removeServiceItem} className="w-fit">
                   <input type="hidden" name="id" value={item.id} />
-                  <Button type="submit" size="sm" variant="ghost" className="text-danger">
-                    Delete this item
-                  </Button>
+                  <ConfirmSubmit
+                    recordKind="gallery item"
+                    recordName={item.title}
+                    label="Delete this item"
+                  />
                 </form>
               </div>
             ))}
@@ -152,9 +155,11 @@ export default async function AdminServices({
                   </form>
                   <form action={removeService}>
                     <input type="hidden" name="id" value={service.id} />
-                    <Button type="submit" size="sm" variant="ghost" className="text-danger">
-                      Delete
-                    </Button>
+                    <ConfirmSubmit
+                      recordKind="service"
+                      recordName={service.name}
+                      description="Its page, gallery items, and menu entries go with it."
+                    />
                   </form>
                 </div>
               </div>

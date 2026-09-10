@@ -5,6 +5,7 @@ import { getJobById, listJobs } from "@/lib/server/db";
 import { removeJob, toggleJob } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
 import { FormModal } from "@/components/admin/form-modal";
+import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { Pagination, paginate, parsePage } from "@/components/admin/pagination";
 import { JobForm } from "@/app/admin/(panel)/jobs/job-form";
 import { Button } from "@/components/ui/button";
@@ -103,9 +104,7 @@ export default async function AdminJobs({
                   </form>
                   <form action={removeJob}>
                     <input type="hidden" name="id" value={job.id} />
-                    <Button type="submit" size="sm" variant="ghost" className="text-danger">
-                      Delete
-                    </Button>
+                    <ConfirmSubmit recordKind="role" recordName={job.title} />
                   </form>
                 </div>
               </div>

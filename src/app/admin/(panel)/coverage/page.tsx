@@ -5,6 +5,7 @@ import { getCoverageById, listCoverage } from "@/lib/server/db";
 import { removeCoverage } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
 import { FormModal } from "@/components/admin/form-modal";
+import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { CoverageForm } from "@/app/admin/(panel)/coverage/coverage-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -95,9 +96,7 @@ export default async function AdminCoverage({
                       </Button>
                       <form action={removeCoverage}>
                         <input type="hidden" name="id" value={row.id} />
-                        <Button type="submit" size="sm" variant="ghost" className="text-danger">
-                          Delete
-                        </Button>
+                        <ConfirmSubmit recordKind="coverage area" recordName={row.label} />
                       </form>
                     </div>
                   </Card>

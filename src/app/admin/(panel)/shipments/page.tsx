@@ -12,6 +12,7 @@ import { SHIPMENT_STATUSES } from "@/lib/data/shipment-status";
 import { addMilestone, removeShipment } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
 import { FormModal } from "@/components/admin/form-modal";
+import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { Pagination, paginate, parsePage } from "@/components/admin/pagination";
 import { ShipmentForm } from "@/app/admin/(panel)/shipments/shipment-form";
 import { Button } from "@/components/ui/button";
@@ -182,9 +183,11 @@ export default async function AdminShipments({
                   </Button>
                   <form action={removeShipment}>
                     <input type="hidden" name="id" value={s.id} />
-                    <Button type="submit" size="sm" variant="ghost" className="text-danger">
-                      Delete
-                    </Button>
+                    <ConfirmSubmit
+                      recordKind="shipment"
+                      recordName={s.reference}
+                      description="Its milestones and tracking history go with it."
+                    />
                   </form>
                 </div>
               </div>
