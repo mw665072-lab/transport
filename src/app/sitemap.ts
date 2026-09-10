@@ -1,11 +1,22 @@
 import type { MetadataRoute } from "next";
 import { COMPANY } from "@/lib/data/company";
-import { SERVICES } from "@/lib/data/services";
-import { BLOG_POSTS } from "@/lib/data/blog";
+import { getServices } from "@/lib/server/services";
+import { getPosts } from "@/lib/server/site-data";
+import { getEquipment } from "@/lib/server/fleet";
 
-export const dynamic = "force-static";
+/**
+ * Services, equipment, and articles come from the database, so the sitemap is
+ * generated per request rather than frozen at build time. Hiding a service in
+ * the admin panel removes it here as well as from the site.
+ */
+export const dynamic = "force-dynamic";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [services, posts, equipment] = await Promise.all([
+    getServices(),
+    getPosts(),
+    getEquipment(),
+  ]);
   const staticRoutes = [
     "",
     "/about",
@@ -31,12 +42,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: route === "" ? 1 : route === "/freight-quote" ? 0.95 : 0.7,
     })),
-    ...SERVICES.map((s) => ({
+    ...services.map((s) => ({
       url: `${COMPANY.domain}/services/${s.slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
-    ...BLOG_POSTS.map((p) => ({
+    ...equipment.map((e) => ({
+      url: `${COMPANY.domain}/equipment/${e.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    ...posts.map((p) => ({
       url: `${COMPANY.domain}/blog/${p.slug}`,
       lastModified: new Date(p.date),
       changeFrequency: "yearly" as const,

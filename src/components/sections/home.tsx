@@ -14,8 +14,8 @@ import {
   COMPANY,
   CREDENTIALS,
 } from "@/lib/data/company";
-import { SERVICES } from "@/lib/data/services";
 import type { PublicCoverage, PublicEquipment } from "@/lib/server/fleet";
+import type { PublicService } from "@/lib/server/services";
 import { listStates, stateAbbreviation } from "@/lib/data/us-states";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -100,7 +100,7 @@ export function TrustBand() {
   );
 }
 
-export function ServicesSection() {
+export function ServicesSection({ services }: { services: PublicService[] }) {
   return (
     <section className="section">
       <div className="container-site">
@@ -121,7 +121,7 @@ export function ServicesSection() {
           </div>
         </Reveal>
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s) => (
+          {services.map((s) => (
             <Reveal key={s.slug}>
               <Card className="group h-full p-6 transition hover:-translate-y-1 hover:border-gold-500 hover:shadow-lg">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold-500/10 text-gold-500">
@@ -153,8 +153,9 @@ export function CoverageSection({ coverage }: { coverage: PublicCoverage }) {
           <p className="eyebrow text-steel-600">Coverage area</p>
           <h2 className="section-title text-navy-900">Focused lanes. Clear service areas.</h2>
           <p className="section-intro text-steel-600">
-            Current stated coverage includes four core states with surrounding interstate
-            regions handled according to driver, lane, and equipment availability.
+            Current stated coverage includes {coverage.states.length} core states with
+            surrounding interstate regions handled according to driver, lane, and equipment
+            availability.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             {coverage.states.map((s) => (

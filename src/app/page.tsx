@@ -15,6 +15,7 @@ import { QuickLinks } from "@/components/sections/quick-links";
 import { Testimonials } from "@/components/sections/testimonials";
 import { getTestimonials } from "@/lib/server/site-data";
 import { getCoverage, getEquipment } from "@/lib/server/fleet";
+import { getServices } from "@/lib/server/services";
 
 export const metadata: Metadata = pageMetadata(
   "Zewar Transport LLC | Road Freight Transportation",
@@ -25,16 +26,17 @@ export const metadata: Metadata = pageMetadata(
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [testimonials, coverage, equipment] = await Promise.all([
+  const [testimonials, coverage, equipment, services] = await Promise.all([
     getTestimonials(),
     getCoverage(),
     getEquipment(),
+    getServices(),
   ]);
   return (
     <>
       <HomeHero states={coverage.states} />
       <TrustBand />
-      <ServicesSection />
+      <ServicesSection services={services} />
       <CoverageSection coverage={coverage} />
       <EquipmentSection equipment={equipment} />
       <WhySection />

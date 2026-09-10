@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { US_STATES } from "@/lib/us-states";
-import { SERVICES } from "@/lib/data/services";
 
 const today = () => new Date(new Date().setHours(0, 0, 0, 0));
 
@@ -19,9 +18,10 @@ export const freightQuoteSchema = z.object({
       (value) => new Date(`${value}T00:00:00`) >= today(),
       "Pickup date cannot be in the past",
     ),
-  serviceType: z
-    .string()
-    .refine((value) => SERVICES.some((service) => service.slug === value), "Choose a service"),
+  /** The list of services is editable in the admin panel, so the slug cannot be
+   * checked against a frozen enum here. The API resolves it against the live
+   * table and rejects one that no longer exists. */
+  serviceType: z.string().min(1, "Choose a service"),
   commodity: z.string().min(2, "Enter the commodity"),
   weightLbs: z.number().positive("Weight must be positive").optional(),
   dimensions: z.string().optional(),

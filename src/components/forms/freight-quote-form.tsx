@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { freightQuoteSchema, type FreightQuoteValues } from "@/lib/schemas/freight-quote";
 import { submitForm } from "@/lib/forms/submit";
 import { US_STATES } from "@/lib/us-states";
-import { SERVICES } from "@/lib/data/services";
+import type { PublicService } from "@/lib/server/services";
 import { COMPANY } from "@/lib/data/company";
 import { Button } from "@/components/ui/button";
 import { Honeypot } from "@/components/forms/honeypot";
@@ -26,7 +26,7 @@ const stepFields: (keyof FreightQuoteValues)[][] = [
   ["serviceType", "commodity", "weightLbs", "dimensions", "notes"],
   ["fullName", "company", "email", "phone"],
 ];
-export function FreightQuoteForm() {
+export function FreightQuoteForm({ services }: { services: PublicService[] }) {
   const [step, setStep] = useState(0);
   // The clock starts when the form is first rendered, so the server can tell a
   // human apart from a bot that posts the instant the page loads.
@@ -194,7 +194,7 @@ export function FreightQuoteForm() {
                     <SelectValue placeholder="Choose service" />
                   </SelectTrigger>
                   <SelectContent>
-                    {SERVICES.map((s) => (
+                    {services.map((s) => (
                       <SelectItem key={s.slug} value={s.slug}>
                         {s.name}
                       </SelectItem>

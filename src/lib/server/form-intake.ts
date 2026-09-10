@@ -50,7 +50,8 @@ export async function handleFormSubmission<S extends z.ZodType>({
   request: Request;
   schema: S;
   formName: string;
-  summarise: (data: z.infer<S>) => Summary;
+  /** May be async so a route can resolve database-backed labels. */
+  summarise: (data: z.infer<S>) => Summary | Promise<Summary>;
 }) {
   let payload: unknown;
   try {
@@ -102,7 +103,7 @@ export async function handleFormSubmission<S extends z.ZodType>({
     );
   }
 
-  const summary = summarise(data);
+  const summary = await summarise(data);
   const referenceId = reference();
 
   // The honeypot and the timing probe are spam checks, not business data.

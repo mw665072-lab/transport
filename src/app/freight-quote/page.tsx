@@ -10,6 +10,7 @@ import {
   COMPANY,
 } from "@/lib/data/company";
 import { getCoverage, getEquipment } from "@/lib/server/fleet";
+import { getServices } from "@/lib/server/services";
 import { Card } from "@/components/ui/card";
 import { buildFreightFaq } from "@/lib/data/faq";
 import {
@@ -29,7 +30,11 @@ export function generateMetadata(): Metadata {
 export const dynamic = "force-dynamic";
 
 export default async function Quote() {
-  const [coverage, equipment] = await Promise.all([getCoverage(), getEquipment()]);
+  const [coverage, equipment, services] = await Promise.all([
+    getCoverage(),
+    getEquipment(),
+    getServices(),
+  ]);
   const faq = buildFreightFaq(
     coverage.states,
     equipment.map((e) => e.name),
@@ -54,7 +59,7 @@ export default async function Quote() {
       <section className="section">
         <div className="container-site grid gap-8 lg:grid-cols-[3fr_2fr]">
           <Card className="p-6 md:p-8">
-            <FreightQuoteForm />
+            <FreightQuoteForm services={services} />
           </Card>
           <aside>
             <div className="space-y-4 lg:sticky lg:top-28">

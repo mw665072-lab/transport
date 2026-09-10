@@ -1,6 +1,6 @@
 import { freightQuoteServerSchema } from "@/lib/schemas/freight-quote";
 import { handleFormSubmission } from "@/lib/server/form-intake";
-import { SERVICES } from "@/lib/data/services";
+import { getServices } from "@/lib/server/services";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,9 +10,12 @@ export async function POST(request: Request) {
     request,
     schema: freightQuoteServerSchema,
     formName: "freight-quote",
-    summarise: (data) => {
+    summarise: async (data) => {
+      // The service list is editable, so the label is resolved when the quote
+      // arrives rather than validated against a list frozen at build time.
+      const services = await getServices();
       const service =
-        SERVICES.find((s) => s.slug === data.serviceType)?.name ?? data.serviceType;
+        services.find((s) => s.slug === data.serviceType)?.name ?? data.serviceType;
       return {
         name: data.fullName,
         email: data.email,

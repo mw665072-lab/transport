@@ -3,11 +3,15 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FreightQuoteForm } from "@/components/forms/freight-quote-form";
+import { SERVICES } from "@/lib/data/services";
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+
+// The page passes the live list in; the seeded services stand in for it here.
+const services = SERVICES.map((s) => ({ ...s, navLabel: s.name, navDescription: s.short }));
 describe("FreightQuoteForm", () => {
   it("renders and blocks invalid step progression", async () => {
     const user = userEvent.setup();
-    render(<FreightQuoteForm />);
+    render(<FreightQuoteForm services={services} />);
     expect(screen.getByText("1. Shipment")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /next/i }));
     expect(await screen.findByText("Enter the pickup city")).toBeInTheDocument();
