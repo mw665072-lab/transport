@@ -1,0 +1,18 @@
+{
+  "slug": "demo",
+  "dbName": "demo",
+  "logo": null,
+  "legalName": "TransLogix Logistics LLC",
+  "shortName": "TransLogix",
+  "tagline": "Reliable freight transportation across the United States",
+  "titleDescriptor": "Road Freight Transportation",
+  "foundedYear": 2020,
+  "phone": "+1 000 000-0000",
+  "phoneHref": "tel:+10000000000",
+  "email": "dispatch@example.com",
+  "emailCareers": "careers@example.com",
+  "mcNumber": null,
+  "dotNumber": null,
+  "domain": "https://example.com",
+  "address": null
+}

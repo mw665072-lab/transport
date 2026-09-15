@@ -5,9 +5,14 @@ One codebase serves any number of transport / logistics companies. A single swit
 MongoDB database, so no two companies ever share data.
 
 ```bash
-NEXT_PUBLIC_DEMO=zewar npm run dev   # Zewar Transport, database "zewar"
-NEXT_PUBLIC_DEMO=acme  npm run dev   # Acme Logistics,  database "acme"
+npm run dev                          # default: generic "TransLogix" template, database "demo"
+NEXT_PUBLIC_DEMO=zewar npm run dev    # Zewar Transport, database "zewar"
+NEXT_PUBLIC_DEMO=acme  npm run dev    # Acme Logistics,  database "acme"
 ```
+
+The default demo (`src/demos/demo.json`) is a neutral generic transport company, so a
+fresh copy of this template is never branded as a specific client. Each client just
+adds their own profile and points `NEXT_PUBLIC_DEMO` at it.
 
 > **Local dev caveat:** `NEXT_PUBLIC_DEMO` is baked into the build, and all
 > `next dev` runs in one folder share the same `.next` cache. So run **one** demo at

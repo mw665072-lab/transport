@@ -14,7 +14,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const DEFAULT_DEMO = "zewar";
+const DEFAULT_DEMO = "demo";
 const demosDir = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "demos");
 
 export function activeDemoSlug() {

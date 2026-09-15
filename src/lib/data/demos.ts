@@ -11,6 +11,7 @@
  * To add a company: drop `src/demos/<slug>.json` next to the others and register
  * it in the DEMOS map below.
  */
+import demo from "@/demos/demo.json";
 import zewar from "@/demos/zewar.json";
 import acme from "@/demos/acme.json";
 
@@ -49,14 +50,19 @@ export type DemoProfile = {
 
 /** Every known company. Add a line here when you add a JSON profile. */
 export const DEMOS = {
+  demo: demo as DemoProfile,
   zewar: zewar as DemoProfile,
   acme: acme as DemoProfile,
 } as const;
 
 export type DemoSlug = keyof typeof DEMOS;
 
-/** Used when no DEMO is set, or an unknown one is set. */
-export const DEFAULT_DEMO: DemoSlug = "zewar";
+/**
+ * Used when no DEMO is set, or an unknown one is set. Defaults to the neutral
+ * generic company so a fresh copy of the template is never branded as a specific
+ * client — each client sets NEXT_PUBLIC_DEMO to their own profile.
+ */
+export const DEFAULT_DEMO: DemoSlug = "demo";
 
 /**
  * The active demo slug. NEXT_PUBLIC_DEMO is readable in the browser bundle (so
