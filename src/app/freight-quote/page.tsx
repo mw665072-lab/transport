@@ -23,7 +23,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Get a Freight Quote",
-    "Request a Zewar Transport road freight quote for box truck, cargo van, Sprinter van, hotshot, or freight service.",
+    `Request a ${COMPANY.shortName} road freight quote for box truck, cargo van, Sprinter van, hotshot, or freight service.`,
     "/freight-quote",
   );
 }

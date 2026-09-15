@@ -2,7 +2,7 @@
  * Adds the Warehousing service plus a starter gallery.
  *
  * The live WordPress /warehousing/ page had no warehousing content: its gallery
- * was the Phlox theme's demo portfolio. None of it belongs to Zewar, so nothing
+ * was the Phlox theme's demo portfolio. None of it belongs to this carrier, so nothing
  * was copied. The items below are freight-relevant placeholders using images
  * already in the project. Replace them in /admin/services.
  *
@@ -10,13 +10,17 @@
  */
 import { MongoClient } from "mongodb";
 import { loadEnv } from "./load-env.mjs";
+import { loadDemo, demoDbName } from "./load-demo.mjs";
 
 loadEnv();
+
+const demo = loadDemo();
+const COMPANY = demo.shortName;
 
 const client = await new MongoClient(
   process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017",
 ).connect();
-const db = client.db(process.env.MONGODB_DB ?? "zewar");
+const db = client.db(demoDbName(demo));
 
 async function nextId(name) {
   const res = await db
@@ -41,7 +45,7 @@ await services.updateOne(
       nav_label: "Warehousing",
       nav_description: "Short-term storage & cross-dock handling",
       short: "Short-term storage and cross-dock handling arranged around your road freight.",
-      body: "Warehousing covers the pause between pickup and final delivery: freight that needs to wait for an appointment, a load that has to be broken down before it goes out, or stock held briefly between runs. Zewar Transport arranges this around the road move rather than as a standalone facility service, so the same dispatch team keeps the shipment tracked from first pickup through to final delivery.",
+      body: `Warehousing covers the pause between pickup and final delivery: freight that needs to wait for an appointment, a load that has to be broken down before it goes out, or stock held briefly between runs. ${COMPANY} arranges this around the road move rather than as a standalone facility service, so the same dispatch team keeps the shipment tracked from first pickup through to final delivery.`,
       typical_loads:
         "Palletized freight awaiting an appointment\nCross-dock transfers between vehicles\nShort-term overflow stock",
       turnaround: "Confirmed per shipment, based on location and duration required.",

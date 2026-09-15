@@ -7,10 +7,11 @@ import { pageMetadata } from "@/lib/metadata";
 import { getServices } from "@/lib/server/services";
 import { ServicesOverview } from "@/components/sections/services-overview";
 import { Card } from "@/components/ui/card";
+import { COMPANY } from "@/lib/data/company";
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Road Freight Services",
-    "Explore Zewar Transport box truck, hotshot, cargo van, Sprinter van, and road freight transportation services.",
+    `Explore ${COMPANY.shortName} box truck, hotshot, cargo van, Sprinter van, and road freight transportation services.`,
     "/services",
   );
 }
@@ -22,7 +23,7 @@ export default async function Services() {
     <>
       <PageHero
         eyebrow="Services"
-        title="The equipment and road services Zewar actually operates."
+        title={`The equipment and road services ${COMPANY.shortName} actually operates.`}
         description="No air freight, ocean freight, ports, warehousing claims, or fabricated logistics services—just practical road transportation built around vans, box trucks, and hotshot capacity."
       />
       <ServicesOverview services={services} />

@@ -25,10 +25,10 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   if (!(await isAuthenticated())) redirect("/admin/login");
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
       <AdminSidebar />
       <div className="lg:pl-[260px]">
-        <main className="mx-auto w-full max-w-[80rem] px-5 py-8 md:px-8 md:py-10">
+        <main className="mx-auto w-full max-w-[1600px] px-3.5 sm:px-6 lg:px-8 py-6 md:py-8">
           {children}
         </main>
       </div>

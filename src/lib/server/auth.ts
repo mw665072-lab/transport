@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
  * expiring token. If more than one operator ever needs access, replace this with
  * a real identity provider rather than adding more passwords here.
  */
-const COOKIE = "zewar_admin";
+const COOKIE = "site_admin";
 const MAX_AGE_SECONDS = 60 * 60 * 8;
 
 function secret(): string | null {

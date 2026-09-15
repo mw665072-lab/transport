@@ -12,13 +12,16 @@
  */
 import { MongoClient } from "mongodb";
 import { loadEnv } from "./load-env.mjs";
+import { loadDemo, demoDbName } from "./load-demo.mjs";
 
 loadEnv();
+
+const demo = loadDemo();
 
 const client = await new MongoClient(
   process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017",
 ).connect();
-const db = client.db(process.env.MONGODB_DB ?? "zewar");
+const db = client.db(demoDbName(demo));
 
 async function nextId(name) {
   const res = await db

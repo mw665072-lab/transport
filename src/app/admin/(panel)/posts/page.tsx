@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ExternalLink, Newspaper } from "lucide-react";
+import { Calendar, ExternalLink, Newspaper, Tag } from "lucide-react";
 import { getPostById, listPosts } from "@/lib/server/db";
 import { removePost } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "News",
+  title: "News & Articles",
   robots: { index: false, follow: false, nocache: true },
 };
 
@@ -30,13 +30,13 @@ export default async function AdminPosts({
   return (
     <>
       <AdminPageHeader
-        title="News & updates"
-        description="Company updates and guidance articles."
+        title="News & Articles"
+        description="Write company announcements, shipping advice, and industry regulatory updates."
         action={
           <FormModal
-            triggerLabel="Write an update"
-            title={editing ? `Edit: ${editing.title}` : "Write an update"}
-            description="Separate paragraphs with a blank line."
+            triggerLabel="Write an article"
+            title={editing ? `Edit Article: ${editing.title}` : "Write a New Article"}
+            description="Separate paragraphs with a blank line. Published articles appear immediately on the news feed."
             editing={Boolean(editing)}
           >
             <PostForm key={editing?.id ?? "new"} post={editing ?? undefined} />
@@ -44,59 +44,75 @@ export default async function AdminPosts({
         }
       />
 
-      <h2 className="mt-10 text-xl font-bold text-navy-900">All articles ({view.total})</h2>
+      <div className="mt-6 flex items-center justify-between">
+        <h2 className="text-base sm:text-lg font-bold text-navy-950">
+          All Articles ({view.total})
+        </h2>
+      </div>
 
       {view.total === 0 ? (
-        <Card className="mt-4 p-10 text-center">
-          <Newspaper className="mx-auto h-8 w-8 text-steel-600" aria-hidden="true" />
-          <p className="mt-4 font-semibold text-navy-900">No articles in the database yet.</p>
-          <p className="mt-2 text-sm text-steel-600">
-            Until you publish one, the news page falls back to the guide defined in the code, so
-            it is never empty.
+        <Card className="mt-4 p-8 sm:p-12 text-center border-dashed border-slate-200">
+          <Newspaper className="mx-auto h-8 w-8 text-slate-400" aria-hidden="true" />
+          <p className="mt-3 font-semibold text-navy-950">No published articles yet</p>
+          <p className="mt-1 text-sm text-slate-500">
+            Click &ldquo;Write an article&rdquo; to publish the first blog or news update.
           </p>
         </Card>
       ) : (
-        <div className="mt-4 grid gap-4">
+        <div className="mt-4 grid gap-3.5 sm:gap-4">
           {view.items.map((post) => (
-            <Card key={post.id} className="p-5 md:p-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="min-w-0">
+            <Card
+              key={post.id}
+              className="group rounded-xl border border-slate-200/90 bg-white p-4 sm:p-5 lg:p-6 shadow-xs hover:border-slate-300 transition-colors"
+            >
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg font-bold text-navy-900">{post.title}</h3>
+                    <h3 className="text-base sm:text-lg font-bold text-navy-950">{post.title}</h3>
                     <span
-                      className={`rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide ${
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${
                         post.status === "published"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-slate-100 text-slate-400"
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          : "bg-slate-100 text-slate-500 border border-slate-200"
                       }`}
                     >
                       {post.status === "published" ? "Live" : "Draft"}
                     </span>
-                    <span className="rounded-full bg-gold-500/15 px-2.5 py-0.5 text-xs font-bold text-gold-600">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-gold-500/10 border border-gold-500/20 px-2 py-0.5 text-xs font-semibold text-gold-700">
+                      <Tag className="h-3 w-3 text-gold-600" aria-hidden="true" />
                       {post.category}
                     </span>
                   </div>
-                  <p className="mt-1 break-all text-sm text-steel-600">
-                    {post.published_at} · /blog/{post.slug}
-                  </p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-slate-500">
+                    <span className="inline-flex items-center gap-1">
+                      <Calendar className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
+                      {post.published_at}
+                    </span>
+                    <span>·</span>
+                    <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">/blog/{post.slug}</code>
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
-                  <Button asChild size="sm" variant="ghost">
+                <div className="flex flex-wrap items-center gap-1.5 shrink-0 pt-2 lg:pt-0 border-t border-slate-100 lg:border-t-0">
+                  <Button asChild size="sm" variant="ghost" className="h-9 px-3 text-xs text-slate-700 hover:text-navy-950">
                     <Link href={`/admin/posts?edit=${post.id}`}>Edit</Link>
                   </Button>
                   {post.status === "published" && (
-                    <Button asChild size="sm" variant="ghost">
+                    <Button asChild size="sm" variant="ghost" className="h-9 px-3 text-xs text-slate-700 hover:text-navy-950">
                       <Link href={`/blog/${post.slug}`} target="_blank">
                         View
-                        <ExternalLink aria-hidden="true" />
-                        <span className="sr-only"> (opens in a new tab)</span>
+                        <ExternalLink className="h-3 w-3 ml-1 text-slate-400" aria-hidden="true" />
                       </Link>
                     </Button>
                   )}
                   <form action={removePost}>
                     <input type="hidden" name="id" value={post.id} />
-                    <ConfirmSubmit recordKind="article" recordName={post.title} />
+                    <ConfirmSubmit
+                      recordKind="article"
+                      recordName={post.title}
+                      label="Delete"
+                      className="h-9 px-2.5 text-xs"
+                    />
                   </form>
                 </div>
               </div>

@@ -7,6 +7,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { FLEET_DESCRIPTION, SPEC_NOTE } from "@/lib/data/equipment";
 import { getEquipment } from "@/lib/server/fleet";
 import { listStates } from "@/lib/data/us-states";
+import { COMPANY } from "@/lib/data/company";
 import { Card } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const equipment = await getEquipment();
   return pageMetadata(
     "Equipment & Fleet",
-    `See the ${listStates(equipment.map((e) => e.name))} used for Zewar Transport road freight operations.`,
+    `See the ${listStates(equipment.map((e) => e.name))} used for ${COMPANY.shortName} road freight operations.`,
     "/equipment",
   );
 }

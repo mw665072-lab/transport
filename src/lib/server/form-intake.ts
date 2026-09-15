@@ -20,7 +20,7 @@ export function clientIp(request: Request): string {
 
 /** IPs are stored hashed so the database holds no raw addresses. */
 export function hashIp(ip: string): string {
-  const salt = process.env.IP_HASH_SALT ?? "zewar-contact";
+  const salt = process.env.IP_HASH_SALT ?? "contact-hash-salt";
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 32);
 }
 

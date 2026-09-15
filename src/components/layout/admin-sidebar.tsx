@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { COMPANY } from "@/lib/data/company";
 
 /**
  * Grouped so the panel reads as sections rather than one long list. Order runs
@@ -104,15 +105,17 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
         onClick={onNavigate}
         className="flex items-center gap-3 rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
       >
-        <Image
-          src="/images/logo.png"
-          alt=""
-          width={256}
-          height={256}
-          className="h-9 w-9 shrink-0 object-contain"
-        />
+        {COMPANY.logo && (
+          <Image
+            src={COMPANY.logo}
+            alt=""
+            width={256}
+            height={256}
+            className="h-9 w-9 shrink-0 object-contain"
+          />
+        )}
         <span className="min-w-0">
-          <span className="block text-sm font-bold text-white">Zewar Transport</span>
+          <span className="block text-sm font-bold text-white">{COMPANY.shortName}</span>
           <span className="block text-[11px] font-semibold uppercase tracking-[.16em] text-gold-400">
             Admin
           </span>
@@ -182,7 +185,7 @@ export function AdminSidebar() {
           <Menu className="h-6 w-6" aria-hidden="true" />
           <span className="sr-only">Open admin menu</span>
         </button>
-        <span className="text-sm font-bold text-white">Zewar Transport Admin</span>
+        <span className="text-sm font-bold text-white">{COMPANY.shortName} Admin</span>
       </div>
 
       {open && (

@@ -1,0 +1,18 @@
+{
+  "slug": "acme",
+  "dbName": "acme",
+  "logo": null,
+  "legalName": "Acme Logistics LLC",
+  "shortName": "Acme Logistics",
+  "tagline": "Dependable road freight and logistics nationwide",
+  "titleDescriptor": "Freight & Logistics",
+  "foundedYear": 2019,
+  "phone": "+1 312 555-0142",
+  "phoneHref": "tel:+13125550142",
+  "email": "dispatch@acmelogistics.com",
+  "emailCareers": "careers@acmelogistics.com",
+  "mcNumber": null,
+  "dotNumber": null,
+  "domain": "https://acmelogistics.com",
+  "address": null
+}

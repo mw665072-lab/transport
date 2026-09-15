@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/shared/page-hero";
 import { pageMetadata } from "@/lib/metadata";
 import { TrackForm } from "@/components/tracking/track-form";
+import { COMPANY } from "@/lib/data/company";
 
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Track a Shipment",
-    "Enter your Zewar Transport reference number to see the current status and milestone history of your shipment.",
+    `Enter your ${COMPANY.shortName} reference number to see the current status and milestone history of your shipment.`,
     "/track",
   );
 }

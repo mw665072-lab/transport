@@ -152,7 +152,7 @@ export function ApplicationForm({
         <p className="mt-3 leading-relaxed text-steel-600">
           {jobTitle
             ? `Thanks for applying for ${jobTitle}. `
-            : "Thanks for your interest in joining Zewar Transport. "}
+            : `Thanks for your interest in joining ${COMPANY.shortName}. `}
           Our team reviews every application and will contact you if there is a fit.
         </p>
         <p className="mt-4 text-sm text-steel-600">

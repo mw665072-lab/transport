@@ -5,13 +5,14 @@ import { PageHero } from "@/components/shared/page-hero";
 import { pageMetadata } from "@/lib/metadata";
 import { getPosts } from "@/lib/server/site-data";
 import { Card } from "@/components/ui/card";
+import { COMPANY } from "@/lib/data/company";
 
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "News & Insights",
-    "Company updates, new lanes, equipment news, and practical road freight guidance from Zewar Transport.",
+    `Company updates, new lanes, equipment news, and practical road freight guidance from ${COMPANY.shortName}.`,
     "/blog",
   );
 }
@@ -31,7 +32,7 @@ export default async function Blog() {
       <PageHero
         eyebrow="News & insights"
         title="Company updates and practical freight guidance."
-        description="New lanes, equipment news, and guidance based on the services Zewar Transport actually operates."
+        description={`New lanes, equipment news, and guidance based on the services ${COMPANY.shortName} actually operates.`}
       />
 
       <section className="section">

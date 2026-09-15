@@ -1,5 +1,6 @@
 import "server-only";
 import { MongoClient, type Db, type Collection, type Document } from "mongodb";
+import { activeDemo } from "@/lib/data/demos";
 
 /**
  * One shared client for the whole app.
@@ -9,7 +10,10 @@ import { MongoClient, type Db, type Collection, type Document } from "mongodb";
  * module is evaluated once and the cache is simply the module scope.
  */
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB ?? "zewar";
+// The database name follows the active demo, so switching DEMO switches the whole
+// company AND its isolated database at once. MONGODB_DB can still force a specific
+// name when needed (e.g. a shared staging database).
+const dbName = process.env.MONGODB_DB?.trim() || activeDemo().dbName;
 
 if (!uri) {
   throw new Error(

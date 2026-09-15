@@ -10,13 +10,14 @@
 import { DatabaseSync } from "node:sqlite";
 import { MongoClient } from "mongodb";
 import { loadEnv } from "./load-env.mjs";
+import { demoDbName } from "./load-demo.mjs";
 
 loadEnv();
 import { existsSync } from "node:fs";
 
 const sqlitePath = process.argv[2] ?? process.env.CONTACT_DB_PATH ?? "./data/zewar.db";
 const uri = process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017";
-const dbName = process.env.MONGODB_DB ?? "zewar";
+const dbName = demoDbName();
 
 if (!existsSync(sqlitePath)) {
   console.log(`No SQLite file at ${sqlitePath}; nothing to migrate.`);

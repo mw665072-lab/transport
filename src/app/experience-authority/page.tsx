@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Experience & Authority",
-    "Review Zewar Transport company status, operating history, compliance focus, and how to verify operating authority before tendering freight.",
+    `Review ${COMPANY.shortName} company status, operating history, compliance focus, and how to verify operating authority before tendering freight.`,
     "/experience-authority",
   );
 }
@@ -26,7 +26,7 @@ export default function Experience() {
       <PageHero
         eyebrow="Trust & authority"
         title="Verify our authority before you tender freight."
-        description="Zewar Transport publishes only confirmed compliance information. Anything still being verified is shared directly by dispatch rather than displayed unverified."
+        description={`${COMPANY.shortName} publishes only confirmed compliance information. Anything still being verified is shared directly by dispatch rather than displayed unverified.`}
       />
       <section className="section">
         <div className="container-site grid gap-6 md:grid-cols-2">

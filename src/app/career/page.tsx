@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Careers",
-    "Open driver, dispatch, and operations roles at Zewar Transport LLC, plus how to register your interest when nothing matches.",
+    `Open driver, dispatch, and operations roles at ${COMPANY.legalName}, plus how to register your interest when nothing matches.`,
     "/career",
   );
 }
@@ -85,7 +85,7 @@ export default async function Career() {
     <>
       <PageHero
         eyebrow="Careers"
-        title="Drive and dispatch with Zewar Transport."
+        title={`Drive and dispatch with ${COMPANY.shortName}.`}
         description="We hire drivers, owner operators, and operations staff as lanes and volume grow. Every open role is listed below with what it involves and where it runs."
       />
 

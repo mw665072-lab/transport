@@ -83,7 +83,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
       {others.length > 0 && (
         <section className="section bg-slate-50">
           <div className="container-site">
-            <h2 className="section-title text-navy-900">More from Zewar Transport.</h2>
+            <h2 className="section-title text-navy-900">More from {COMPANY.shortName}.</h2>
             <ul className="mt-10 grid gap-6 md:grid-cols-3">
               {others.map((p) => (
                 <li key={p.slug}>

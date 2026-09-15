@@ -10,10 +10,12 @@ import {
 } from "@/lib/server/auth";
 import {
   setStatus,
+  deleteSubmission,
   upsertJob,
   setJobStatus,
   deleteJob,
   setApplicationStatus,
+  deleteApplication,
   type SubmissionStatus,
   type JobStatus,
   type ApplicationStatus,
@@ -31,7 +33,9 @@ import {
   upsertShipment,
   addShipmentEvent,
   deleteShipment,
+  deleteShipmentEvent,
   setDocumentStatus,
+  deleteDocument,
   upsertEquipment,
   setEquipmentStatus,
   deleteEquipment,
@@ -62,6 +66,14 @@ export async function updateStatus(formData: FormData) {
   const status = String(formData.get("status")) as SubmissionStatus;
   if (!Number.isInteger(id) || !["new", "read", "archived"].includes(status)) return;
   await setStatus(id, status);
+  revalidatePath("/admin");
+}
+
+export async function removeSubmission(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await deleteSubmission(id);
   revalidatePath("/admin");
 }
 
@@ -146,6 +158,14 @@ export async function updateApplicationStatus(formData: FormData) {
   )
     return;
   await setApplicationStatus(id, status);
+  revalidatePath("/admin/applications");
+}
+
+export async function removeApplication(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await deleteApplication(id);
   revalidatePath("/admin/applications");
 }
 
@@ -402,6 +422,14 @@ export async function addMilestone(formData: FormData) {
   revalidatePath("/admin/shipments");
 }
 
+export async function removeMilestone(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await deleteShipmentEvent(id);
+  revalidatePath("/admin/shipments");
+}
+
 export async function removeShipment(formData: FormData) {
   if (!(await isAuthenticated())) redirect("/admin/login");
   const id = Number(formData.get("id"));
@@ -416,6 +444,14 @@ export async function updateDocumentStatus(formData: FormData) {
   const status = String(formData.get("status"));
   if (!Number.isInteger(id) || !["new", "matched", "archived"].includes(status)) return;
   await setDocumentStatus(id, status);
+  revalidatePath("/admin/documents");
+}
+
+export async function removeDocument(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await deleteDocument(id);
   revalidatePath("/admin/documents");
 }
 

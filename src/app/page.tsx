@@ -11,6 +11,7 @@ import {
   WhySection,
 } from "@/components/sections/home";
 import { pageMetadata } from "@/lib/metadata";
+import { COMPANY, SITE_TITLE } from "@/lib/data/company";
 import { QuickLinks } from "@/components/sections/quick-links";
 import { Testimonials } from "@/components/sections/testimonials";
 import { getTestimonials } from "@/lib/server/site-data";
@@ -18,8 +19,8 @@ import { getCoverage, getEquipment } from "@/lib/server/fleet";
 import { getServices } from "@/lib/server/services";
 
 export const metadata: Metadata = pageMetadata(
-  "Zewar Transport LLC | Road Freight Transportation",
-  "Reliable box truck, cargo van, Sprinter van, hotshot, and road freight transportation across Zewar Transport's stated U.S. service areas.",
+  SITE_TITLE,
+  `Reliable box truck, cargo van, Sprinter van, hotshot, and road freight transportation across ${COMPANY.shortName}'s stated U.S. service areas.`,
   "/",
 );
 

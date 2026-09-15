@@ -1,4 +1,5 @@
 import { listStates } from "@/lib/data/us-states";
+import { COMPANY } from "@/lib/data/company";
 
 export type FaqEntry = { question: string; answer: string };
 
@@ -14,11 +15,11 @@ export function buildFreightFaq(states: string[], equipmentNames: string[]): Faq
         "Pickup and delivery locations, pickup date, freight type, commodity, dimensions when available, weight when known, and the best contact details.",
     },
     {
-      question: "Which equipment does Zewar Transport use?",
-      answer: `Zewar Transport focuses on ${listStates(equipmentNames)}. The assigned equipment is confirmed against each shipment.`,
+      question: `Which equipment does ${COMPANY.shortName} use?`,
+      answer: `${COMPANY.shortName} focuses on ${listStates(equipmentNames)}. The assigned equipment is confirmed against each shipment.`,
     },
     {
-      question: "Where does Zewar Transport operate?",
+      question: `Where does ${COMPANY.shortName} operate?`,
       answer: `Current stated coverage includes ${listStates(
         states,
       )}, plus surrounding interstate regions based on lane and driver availability.`,

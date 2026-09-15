@@ -10,6 +10,7 @@ import { Field } from "@/components/forms/form-field";
 import { Honeypot } from "@/components/forms/honeypot";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { COMPANY } from "@/lib/data/company";
 import {
   Select,
   SelectContent,
@@ -61,7 +62,7 @@ export function OwnerOperatorForm() {
         <CheckCircle2 className="h-9 w-9 text-emerald-600" />
         <h2 className="mt-4 text-2xl font-bold text-navy-900">Application details received.</h2>
         <p className="mt-2 text-steel-600">
-          Zewar Transport will review the information and contact you if there is a fit.
+          {COMPANY.shortName} will review the information and contact you if there is a fit.
         </p>
       </div>
     );

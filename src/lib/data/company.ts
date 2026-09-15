@@ -1,49 +1,46 @@
-// Carrier identifiers are published only once the real FMCSA-issued values are
-// confirmed. Leave them null until then: every part of the site that displays
-// operating authority checks CARRIER_AUTHORITY_PUBLISHED and omits the section
-// rather than rendering a placeholder to shippers and brokers.
-const MC_NUMBER: string | null = null;
-const DOT_NUMBER: string | null = null;
+import { activeDemo, type DemoProfile, type PostalAddress } from "@/lib/data/demos";
 
-export type PostalAddress = {
-  readonly streetAddress: string;
-  readonly addressLocality: string;
-  readonly addressRegion: string;
-  readonly postalCode: string;
-  readonly addressCountry: string;
-};
+export type { PostalAddress } from "@/lib/data/demos";
 
 type CompanyProfile = {
   readonly legalName: string;
   readonly shortName: string;
+  // Logo image path, or null to render the company name as a text wordmark.
+  readonly logo: string | null;
   readonly tagline: string;
+  // Short descriptor appended after the name in the browser tab title, e.g.
+  // "Acme Logistics | Road Freight Transportation".
+  readonly titleDescriptor: string;
   readonly foundedYear: number;
   readonly phone: string;
   readonly phoneHref: string;
   readonly email: string;
   readonly emailCareers: string;
+  // Carrier identifiers are published only once the real FMCSA-issued values are
+  // confirmed. They stay null until then: every part of the site that displays
+  // operating authority checks CARRIER_AUTHORITY_PUBLISHED and omits the section
+  // rather than rendering a placeholder to shippers and brokers.
   readonly mcNumber: string | null;
   readonly dotNumber: string | null;
   readonly address: PostalAddress | null;
   readonly domain: string;
 };
 
-// Physical business address. Structured data is emitted as LocalBusiness once this
-// is filled in, and as Organization until then. Organization has no address
-// requirement, so search engines are not handed an incomplete LocalBusiness.
-const ADDRESS: PostalAddress | null = {
-  streetAddress: "5721 Tavenner Mill Drive, Unit 303",
-  addressLocality: "Woodbridge",
-  addressRegion: "VA",
-  postalCode: "22193",
-  addressCountry: "US",
-};
+// The active company comes from the DEMO switch (see src/lib/data/demos.ts).
+const DEMO: DemoProfile = activeDemo();
+
+// Physical business address, from the active demo profile. Structured data is
+// emitted as LocalBusiness once this is set, and as Organization until then.
+// Organization has no address requirement, so search engines are not handed an
+// incomplete LocalBusiness.
+const ADDRESS: PostalAddress | null = DEMO.address;
 
 // The canonical origin. NEXT_PUBLIC_SITE_URL is inlined at build time, so a bad
 // value ends up in sitemap.xml, robots.txt, and every canonical tag. Only absolute
 // http(s) origins are accepted, and a localhost origin is ignored in production
 // builds so a local `next build` cannot ship a sitemap full of localhost URLs.
-const FALLBACK_ORIGIN = "https://zewartransport.com";
+// When unset, the active demo's own domain is used.
+const FALLBACK_ORIGIN = DEMO.domain;
 
 function resolveOrigin(): string {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -59,16 +56,18 @@ function resolveOrigin(): string {
 const SITE_ORIGIN = resolveOrigin();
 
 export const COMPANY: CompanyProfile = {
-  legalName: "Zewar Transport LLC",
-  shortName: "Zewar Transport",
-  tagline: "Reliable freight transportation across the United States",
-  foundedYear: 2023,
-  phone: "+1 916 841-8948",
-  phoneHref: "tel:+19168418948",
-  email: "sam@zewartransport.com",
-  emailCareers: "hr@zewartransport.com",
-  mcNumber: MC_NUMBER,
-  dotNumber: DOT_NUMBER,
+  legalName: DEMO.legalName,
+  shortName: DEMO.shortName,
+  logo: DEMO.logo,
+  tagline: DEMO.tagline,
+  titleDescriptor: DEMO.titleDescriptor,
+  foundedYear: DEMO.foundedYear,
+  phone: DEMO.phone,
+  phoneHref: DEMO.phoneHref,
+  email: DEMO.email,
+  emailCareers: DEMO.emailCareers,
+  mcNumber: DEMO.mcNumber,
+  dotNumber: DEMO.dotNumber,
   address: ADDRESS,
   domain: SITE_ORIGIN,
 };
@@ -102,14 +101,19 @@ export const AUTHORITY_ON_REQUEST =
 
 export const MISSION =
   "Our mission is to provide safe, on-time, and professional transportation services while ensuring complete customer satisfaction and long-term business partnerships.";
-export const ABOUT_INTRO =
-  "Zewar Transport LLC is a reliable transportation company providing freight and logistics solutions across the United States. We specialize in safe, on-time delivery using professional drivers and well-maintained equipment.";
+export const ABOUT_INTRO = `${COMPANY.legalName} is a reliable transportation company providing freight and logistics solutions across the United States. We specialize in safe, on-time delivery using professional drivers and well-maintained equipment.`;
 export const CREDENTIALS = [
   "Registered LLC in the United States",
-  "Active transportation operations since 2023",
+  `Active transportation operations since ${COMPANY.foundedYear}`,
   "Focus on safety, compliance, and reliable freight handling",
   "Professional dispatch and driver coordination",
 ] as const;
 
 /** North American Industry Classification code for Truck Transportation. */
 export const NAICS_TRUCK_TRANSPORTATION = "484";
+
+/** Default browser-tab title (home page and metadata fallback). */
+export const SITE_TITLE = `${COMPANY.legalName} | ${COMPANY.titleDescriptor}`;
+
+/** Title template for inner pages: "<page> | <short name>". */
+export const TITLE_TEMPLATE = `%s | ${COMPANY.shortName}`;

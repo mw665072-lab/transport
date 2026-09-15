@@ -1,3 +1,5 @@
+import { COMPANY } from "@/lib/data/company";
+
 export const BLOG_POSTS = [
   {
     slug: "choosing-the-right-vehicle",
@@ -8,7 +10,7 @@ export const BLOG_POSTS = [
     body: [
       "Vehicle choice starts with the freight itself: dimensions, total weight, piece count, loading method, pickup access, and delivery requirements.",
       "Cargo vans can be efficient for smaller enclosed loads. Sprinter vans add usable interior height and length. Box trucks suit larger palletized or commercial freight, while hotshot service can be useful for urgent or job-site moves that match the available trailer.",
-      "The final decision should always be confirmed against the exact equipment assigned. Zewar Transport reviews shipment details during quoting instead of assuming one vehicle configuration fits every load.",
+      `The final decision should always be confirmed against the exact equipment assigned. ${COMPANY.shortName} reviews shipment details during quoting instead of assuming one vehicle configuration fits every load.`,
     ],
   },
 ] as const;

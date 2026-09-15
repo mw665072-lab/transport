@@ -6,7 +6,12 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MobileActionBar } from "@/components/layout/mobile-action-bar";
 import { SiteChrome } from "@/components/layout/site-chrome";
-import { COMPANY, NAICS_TRUCK_TRANSPORTATION } from "@/lib/data/company";
+import {
+  COMPANY,
+  NAICS_TRUCK_TRANSPORTATION,
+  SITE_TITLE,
+  TITLE_TEMPLATE,
+} from "@/lib/data/company";
 import { NAV, type NavItem } from "@/lib/data/nav";
 import { getServices } from "@/lib/server/services";
 import { getSocialLinks } from "@/lib/server/site-data";
@@ -24,13 +29,13 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(COMPANY.domain),
   title: {
-    default: "Zewar Transport LLC | Road Freight Transportation",
-    template: "%s | Zewar Transport",
+    default: SITE_TITLE,
+    template: TITLE_TEMPLATE,
   },
   description: COMPANY.tagline,
 };
 
-// Zewar is a road freight carrier, not a household mover, so this is not a
+// The company is a road freight carrier, not a household mover, so this is not a
 // MovingCompany. LocalBusiness requires a postal address for rich results, so the
 // type stays Organization until COMPANY.address is filled in.
 function buildSchema(states: string[]) {

@@ -9,7 +9,7 @@ import { COMPANY } from "@/lib/data/company";
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Send a Document",
-    "Upload a bill of lading, proof of delivery, or other paperwork for a Zewar Transport load.",
+    `Upload a bill of lading, proof of delivery, or other paperwork for a ${COMPANY.shortName} load.`,
     "/documents",
   );
 }

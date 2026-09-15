@@ -6,6 +6,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { getCoverage } from "@/lib/server/fleet";
 import { listStates, stateAbbreviation } from "@/lib/data/us-states";
 import { COVERAGE } from "@/lib/data/coverage";
+import { COMPANY } from "@/lib/data/company";
 import { pageMetadata } from "@/lib/metadata";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { states } = await getCoverage();
   return pageMetadata(
     "Freight Coverage Area",
-    `See Zewar Transport's stated ${listStates(states)}, and surrounding interstate road-freight coverage.`,
+    `See ${COMPANY.shortName}'s stated ${listStates(states)}, and surrounding interstate road-freight coverage.`,
     "/coverage-area",
   );
 }
@@ -35,7 +36,7 @@ export default async function Coverage() {
             <div className="relative aspect-[4/3] w-full">
               <Image
                 src="/images/us-coverage-map.jpg"
-                alt="Zewar Transport US interstate coverage and route map"
+                alt={`${COMPANY.shortName} US interstate coverage and route map`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Facebook, Instagram, Linkedin, Mail, Phone, ShieldCheck, Youtube } from "lucide-react";
 import { CARRIER_AUTHORITY_PUBLISHED, CARRIER_IDS, COMPANY } from "@/lib/data/company";
+import { BrandMark } from "@/components/layout/brand-mark";
 
 import {
   Accordion,
@@ -99,16 +99,13 @@ export function Footer({
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,2fr)]">
           <div>
             <Link href="/" className="inline-block">
-              <Image
-                src="/images/logo.png"
-                alt="Zewar Transport LLC"
-                width={256}
-                height={256}
-                className="h-16 w-auto object-contain drop-shadow-md"
+              <BrandMark
+                imgClassName="h-16 w-auto object-contain drop-shadow-md"
+                textClassName="text-2xl text-white"
               />
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">
-              Zewar Transport LLC provides professional road freight transportation using vans,
+              {COMPANY.legalName} provides professional road freight transportation using vans,
               box trucks, and hotshot capacity for regional and interstate business shipments
               across its stated service areas.
             </p>

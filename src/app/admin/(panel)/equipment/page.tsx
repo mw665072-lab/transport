@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ExternalLink, Truck } from "lucide-react";
+import { ExternalLink, Eye, EyeOff, Truck } from "lucide-react";
 import { getEquipmentById, listEquipment } from "@/lib/server/db";
 import { removeEquipment, toggleEquipment } from "@/app/admin/actions";
 import { AdminPageHeader } from "@/components/layout/admin-page-header";
@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Equipment",
+  title: "Equipment Fleet",
   robots: { index: false, follow: false, nocache: true },
 };
 
@@ -30,12 +30,12 @@ export default async function AdminEquipment({
   return (
     <>
       <AdminPageHeader
-        title="Equipment"
-        description="The fleet shown on the homepage, the equipment page, and each vehicle's own page."
+        title="Fleet & Equipment"
+        description="Vehicles, trailers, and specialized transport equipment shown across the website."
         action={
           <FormModal
             triggerLabel="Add equipment"
-            title={editing ? `Edit: ${editing.name}` : "Add equipment"}
+            title={editing ? `Edit Equipment: ${editing.name}` : "Add Fleet Vehicle"}
             description="Specifications take one “Label: value” pair per line. Typical uses take one item per line."
             editing={Boolean(editing)}
           >
@@ -44,53 +44,58 @@ export default async function AdminEquipment({
         }
       />
 
-      <h2 className="mt-10 text-xl font-bold text-navy-900">All equipment ({view.total})</h2>
+      <div className="mt-6 flex items-center justify-between">
+        <h2 className="text-base sm:text-lg font-bold text-navy-950">
+          All Equipment ({view.total})
+        </h2>
+      </div>
 
       {view.total === 0 ? (
-        <Card className="mt-4 p-10 text-center">
-          <Truck className="mx-auto h-8 w-8 text-steel-600" aria-hidden="true" />
-          <p className="mt-4 font-semibold text-navy-900">No equipment in the database yet.</p>
-          <p className="mt-2 text-sm text-steel-600">
-            Until you add one, the site falls back to the three vehicles defined in the code, so
-            the fleet is never empty.
+        <Card className="mt-4 p-8 sm:p-12 text-center border-dashed border-slate-200">
+          <Truck className="mx-auto h-8 w-8 text-slate-400" aria-hidden="true" />
+          <p className="mt-3 font-semibold text-navy-950">No custom equipment created</p>
+          <p className="mt-1 text-sm text-slate-500">
+            The site uses default fleet entries until you add custom vehicles.
           </p>
         </Card>
       ) : (
-        <div className="mt-4 grid gap-4">
+        <div className="mt-4 grid gap-3.5 sm:gap-4">
           {view.items.map((item) => (
-            <Card key={item.id} className="p-5 md:p-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="min-w-0">
+            <Card
+              key={item.id}
+              className="group rounded-xl border border-slate-200/90 bg-white p-4 sm:p-5 lg:p-6 shadow-xs hover:border-slate-300 transition-colors"
+            >
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg font-bold text-navy-900">{item.name}</h3>
+                    <h3 className="text-base sm:text-lg font-bold text-navy-950">{item.name}</h3>
                     <span
-                      className={`rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide ${
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${
                         item.status === "published"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-slate-100 text-slate-400"
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          : "bg-slate-100 text-slate-500 border border-slate-200"
                       }`}
                     >
                       {item.status === "published" ? "Live" : "Hidden"}
                     </span>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-bold text-steel-600">
-                      #{item.sort_order}
+                    <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      Order: #{item.sort_order}
                     </span>
                   </div>
-                  <p className="mt-1 break-all text-sm text-steel-600">
-                    /equipment/{item.slug}
+                  <p className="mt-1 text-xs sm:text-sm text-slate-500">
+                    <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">/equipment/{item.slug}</code>
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
-                  <Button asChild size="sm" variant="ghost">
+                <div className="flex flex-wrap items-center gap-1.5 shrink-0 pt-2 lg:pt-0 border-t border-slate-100 lg:border-t-0">
+                  <Button asChild size="sm" variant="ghost" className="h-9 px-3 text-xs text-slate-700 hover:text-navy-950">
                     <Link href={`/admin/equipment?edit=${item.id}`}>Edit</Link>
                   </Button>
                   {item.status === "published" && (
-                    <Button asChild size="sm" variant="ghost">
+                    <Button asChild size="sm" variant="ghost" className="h-9 px-3 text-xs text-slate-700 hover:text-navy-950">
                       <Link href={`/equipment/${item.slug}`} target="_blank">
                         View
-                        <ExternalLink aria-hidden="true" />
-                        <span className="sr-only"> (opens in a new tab)</span>
+                        <ExternalLink className="h-3 w-3 ml-1 text-slate-400" aria-hidden="true" />
                       </Link>
                     </Button>
                   )}
@@ -101,13 +106,28 @@ export default async function AdminEquipment({
                       name="status"
                       value={item.status === "published" ? "hidden" : "published"}
                     />
-                    <Button type="submit" size="sm" variant="ghost">
-                      {item.status === "published" ? "Hide" : "Publish"}
+                    <Button type="submit" size="sm" variant="ghost" className="h-9 px-2.5 text-xs text-slate-600 hover:text-navy-950">
+                      {item.status === "published" ? (
+                        <>
+                          <EyeOff className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                          Hide
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                          Publish
+                        </>
+                      )}
                     </Button>
                   </form>
                   <form action={removeEquipment}>
                     <input type="hidden" name="id" value={item.id} />
-                    <ConfirmSubmit recordKind="equipment entry" recordName={item.name} />
+                    <ConfirmSubmit
+                      recordKind="equipment"
+                      recordName={item.name}
+                      label="Delete"
+                      className="h-9 px-2.5 text-xs"
+                    />
                   </form>
                 </div>
               </div>

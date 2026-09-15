@@ -1,0 +1,24 @@
+{
+  "slug": "zewar",
+  "dbName": "zewar",
+  "logo": "/images/logo.png",
+  "legalName": "Zewar Transport LLC",
+  "shortName": "Zewar Transport",
+  "tagline": "Reliable freight transportation across the United States",
+  "titleDescriptor": "Road Freight Transportation",
+  "foundedYear": 2023,
+  "phone": "+1 916 841-8948",
+  "phoneHref": "tel:+19168418948",
+  "email": "sam@zewartransport.com",
+  "emailCareers": "hr@zewartransport.com",
+  "mcNumber": null,
+  "dotNumber": null,
+  "domain": "https://zewartransport.com",
+  "address": {
+    "streetAddress": "5721 Tavenner Mill Drive, Unit 303",
+    "addressLocality": "Woodbridge",
+    "addressRegion": "VA",
+    "postalCode": "22193",
+    "addressCountry": "US"
+  }
+}

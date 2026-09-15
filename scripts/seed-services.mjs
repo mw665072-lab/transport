@@ -11,13 +11,17 @@
  */
 import { MongoClient } from "mongodb";
 import { loadEnv } from "./load-env.mjs";
+import { loadDemo, demoDbName } from "./load-demo.mjs";
 
 loadEnv();
+
+const demo = loadDemo();
+const COMPANY = demo.shortName;
 
 const client = await new MongoClient(
   process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017",
 ).connect();
-const db = client.db(process.env.MONGODB_DB ?? "zewar");
+const db = client.db(demoDbName(demo));
 const services = db.collection("services");
 
 async function nextId(name) {
@@ -37,7 +41,7 @@ const items = [
     image: "/images/box-truck.jpg",
     typical_loads: "Palletized freight\nRetail and commercial goods\nEquipment and boxed materials",
     turnaround: "Scheduled, same-day, or expedited options based on lane and availability.",
-    body: "Zewar Transport uses box trucks for freight that needs more protected cargo space than a van while remaining practical for docks, commercial sites, and regional routes. Typical work includes palletized goods, boxed products, retail replenishment, business equipment, and time-sensitive commercial shipments. Capacity varies by the exact truck assigned, so Zewar confirms the legal payload, cargo dimensions, and loading method before dispatch rather than advertising an unverified weight limit.",
+    body: `${COMPANY} uses box trucks for freight that needs more protected cargo space than a van while remaining practical for docks, commercial sites, and regional routes. Typical work includes palletized goods, boxed products, retail replenishment, business equipment, and time-sensitive commercial shipments. Capacity varies by the exact truck assigned, so ${COMPANY} confirms the legal payload, cargo dimensions, and loading method before dispatch rather than advertising an unverified weight limit.`,
     sort_order: 1,
   },
   {
@@ -85,7 +89,7 @@ const items = [
     image: "/images/hero-freight.jpg",
     typical_loads: "Commercial freight\nPallets and packaged goods\nDedicated road shipments",
     turnaround: "Planned or expedited road transport based on shipment requirements and capacity.",
-    body: "Zewar Transport provides road-based freight transportation for businesses that need dependable movement of commercial goods across regional and interstate lanes. The service is built around the company's actual operating model: box trucks, cargo vans, Sprinter vans, and hotshot capacity rather than air, ocean, or port logistics.",
+    body: `${COMPANY} provides road-based freight transportation for businesses that need dependable movement of commercial goods across regional and interstate lanes. The service is built around the company's actual operating model: box trucks, cargo vans, Sprinter vans, and hotshot capacity rather than air, ocean, or port logistics.`,
     sort_order: 5,
   },
   {
@@ -97,7 +101,7 @@ const items = [
     image: "/images/hotshot.jpg",
     typical_loads: "Production-down parts\nMissed-appointment recovery\nUrgent replenishment and documents",
     turnaround: "Same-day dispatch where a driver and suitable vehicle are already in position.",
-    body: "Expedited and same-day delivery covers shipments where timing decides everything: a line-down part, a missed delivery appointment, or replenishment that has to arrive before a site opens. Zewar Transport handles these as dedicated direct runs, so the freight stays on one vehicle from pickup to delivery with no terminal transfer.",
+    body: `Expedited and same-day delivery covers shipments where timing decides everything: a line-down part, a missed delivery appointment, or replenishment that has to arrive before a site opens. ${COMPANY} handles these as dedicated direct runs, so the freight stays on one vehicle from pickup to delivery with no terminal transfer.`,
     sort_order: 6,
   },
 ];

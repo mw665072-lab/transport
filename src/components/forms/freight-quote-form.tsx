@@ -82,7 +82,7 @@ export function FreightQuoteForm({ services }: { services: PublicService[] }) {
         </p>
         <div className="mt-5 space-y-2 text-sm text-navy-900">
           <p>1. Dispatch reviews your route and freight details.</p>
-          <p>2. Zewar confirms equipment and availability.</p>
+          <p>2. {COMPANY.shortName} confirms equipment and availability.</p>
           <p>3. You receive the next-step response within the stated business window.</p>
         </div>
         <a

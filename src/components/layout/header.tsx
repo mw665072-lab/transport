@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
@@ -22,6 +21,7 @@ import {
 } from "lucide-react";
 import { NAV, type NavChild, type NavItem } from "@/lib/data/nav";
 import { COMPANY } from "@/lib/data/company";
+import { BrandMark } from "@/components/layout/brand-mark";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -82,16 +82,13 @@ export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
         {/* Logo */}
         <Link
           href="/"
-          aria-label="Zewar Transport home"
+          aria-label={`${COMPANY.shortName} home`}
           className="shrink-0 transition-opacity hover:opacity-95"
         >
-          <Image
-            src="/images/logo.png"
-            alt="Zewar Transport LLC"
-            width={256}
-            height={256}
+          <BrandMark
             priority
-            className="h-12 w-auto object-contain drop-shadow-sm md:h-14"
+            imgClassName="h-12 w-auto object-contain drop-shadow-sm md:h-14"
+            textClassName={cn("text-xl md:text-2xl", solid ? "text-navy-900" : "text-white")}
           />
         </Link>
 
@@ -254,12 +251,9 @@ export function Header({ nav = NAV }: { nav?: readonly NavItem[] }) {
             </SheetTrigger>
             <SheetContent>
               <div className="pr-12">
-                <Image
-                  src="/images/logo.png"
-                  alt="Zewar Transport LLC"
-                  width={256}
-                  height={256}
-                  className="h-12 w-auto object-contain drop-shadow-sm"
+                <BrandMark
+                  imgClassName="h-12 w-auto object-contain drop-shadow-sm"
+                  textClassName="text-xl text-navy-900"
                 />
               </div>
               <nav className="mt-8">

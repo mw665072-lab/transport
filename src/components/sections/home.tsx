@@ -26,7 +26,7 @@ export function HomeHero({ states }: { states: string[] }) {
     <section className="relative overflow-hidden bg-navy-950 pt-16 text-white md:pt-20">
       <Image
         src="/images/hero-freight.jpg"
-        alt="Zewar Transport freight shipping and commercial transport operations"
+        alt={`${COMPANY.shortName} freight shipping and commercial transport operations`}
         fill
         priority
         sizes="100vw"
@@ -188,7 +188,7 @@ export function CoverageSection({ coverage }: { coverage: PublicCoverage }) {
             <div className="relative aspect-[4/3] w-full">
               <Image
                 src="/images/us-coverage-map.jpg"
-                alt={`Zewar Transport US freight routes and coverage map connecting ${listStates(coverage.states)}`}
+                alt={`${COMPANY.shortName} US freight routes and coverage map connecting ${listStates(coverage.states)}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -273,12 +273,12 @@ export function WhySection() {
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
             <Reveal>
-              <p className="eyebrow text-gold-400">Why Zewar</p>
+              <p className="eyebrow text-gold-400">Why {COMPANY.shortName}</p>
               <h2 className="section-title text-white">
                 Built around reliability and communication.
               </h2>
               <p className="section-intro max-w-xl text-base text-slate-200">
-                From single-pallet urgent shipments to regional dedicated linehauls, Zewar pairs
+                From single-pallet urgent shipments to regional dedicated linehauls, {COMPANY.shortName} pairs
                 direct dispatch coordination with modern tracking across every mile.
               </p>
             </Reveal>
@@ -338,7 +338,7 @@ export function WhySection() {
 export function HowItWorks() {
   const steps = [
     ["01", "Request Quote", "Share origin, destination, timing, and freight details."],
-    ["02", "We Dispatch", "Zewar reviews the lane and matches available equipment."],
+    ["02", "We Dispatch", `${COMPANY.shortName} reviews the lane and matches available equipment.`],
     [
       "03",
       "Delivered On Time",
@@ -376,7 +376,7 @@ export function OwnerBand() {
           <p className="text-sm font-bold uppercase tracking-[.18em] text-gold-400">
             For owner operators
           </p>
-          <h2 className="section-title-sm mt-2">Drive With Zewar.</h2>
+          <h2 className="section-title-sm mt-2">Drive With {COMPANY.shortName}.</h2>
           <p className="mt-3 text-slate-200">
             Tell us about your equipment, experience, and preferred lanes.
           </p>

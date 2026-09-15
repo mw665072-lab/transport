@@ -5,11 +5,12 @@ import { PageHero } from "@/components/shared/page-hero";
 import { pageMetadata } from "@/lib/metadata";
 import { Card } from "@/components/ui/card";
 import { ApplicationForm } from "@/components/careers/application-form";
+import { COMPANY } from "@/lib/data/company";
 
 export function generateMetadata(): Metadata {
   return pageMetadata(
     "Register your interest",
-    "Send a general application to Zewar Transport LLC and we will contact you when a matching role opens.",
+    `Send a general application to ${COMPANY.legalName} and we will contact you when a matching role opens.`,
     "/career/apply",
   );
 }

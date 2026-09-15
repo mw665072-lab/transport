@@ -8,8 +8,8 @@ import { Card } from "@/components/ui/card";
 
 export function generateMetadata(): Metadata {
   return pageMetadata(
-    "Contact Zewar Transport",
-    `Contact Zewar Transport LLC about new shipments, existing loads, partnerships, or careers. Call ${COMPANY.phone} or send a message to dispatch.`,
+    `Contact ${COMPANY.shortName}`,
+    `Contact ${COMPANY.legalName} about new shipments, existing loads, partnerships, or careers. Call ${COMPANY.phone} or send a message to dispatch.`,
     "/contact",
   );
 }
@@ -27,7 +27,7 @@ export default function Contact() {
     <>
       <PageHero
         eyebrow="Contact"
-        title="Talk with Zewar Transport."
+        title={`Talk with ${COMPANY.shortName}.`}
         description="Send shipment, partnership, career, or general enquiries to dispatch. We reply within 2 business hours during operating hours."
       />
 

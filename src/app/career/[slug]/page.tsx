@@ -26,7 +26,7 @@ export async function generateMetadata({
     );
   return pageMetadata(
     job.title,
-    job.summary || `${job.title} at Zewar Transport LLC in ${job.location}.`,
+    job.summary || `${job.title} at ${COMPANY.legalName} in ${job.location}.`,
     `/career/${job.slug}`,
   );
 }

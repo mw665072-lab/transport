@@ -28,8 +28,8 @@ import { Reveal } from "@/components/shared/reveal";
 
 export function generateMetadata(): Metadata {
   return pageMetadata(
-    "About Zewar Transport LLC",
-    "Learn about Zewar Transport LLC, its mission, operating history, fleet standards, and road-freight coordination focus.",
+    `About ${COMPANY.legalName}`,
+    `Learn about ${COMPANY.legalName}, its mission, operating history, fleet standards, and road-freight coordination focus.`,
     "/about",
   );
 }
@@ -140,7 +140,7 @@ export default async function About() {
               <div className="relative aspect-[4/3] w-full">
                 <Image
                   src="/images/logistics-network.jpg"
-                  alt="Zewar Transport dispatch and load coordination operations"
+                  alt={`${COMPANY.shortName} dispatch and load coordination operations`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
@@ -173,7 +173,9 @@ export default async function About() {
         <div className="container-site">
           <Reveal className="max-w-3xl">
             <p className="eyebrow text-steel-600">Transport standards</p>
-            <h2 className="section-title text-navy-900">How Zewar delivers on every load.</h2>
+            <h2 className="section-title text-navy-900">
+              How {COMPANY.shortName} delivers on every load.
+            </h2>
             <p className="section-intro text-steel-600">
               Our transportation model gives commercial shippers dependable, transparent
               capacity without broker runarounds or terminal transfers.
@@ -209,7 +211,9 @@ export default async function About() {
       <section className="section bg-navy-950 text-white">
         <div className="container-site">
           <p className="eyebrow text-gold-400">By the numbers</p>
-          <h2 className="section-title text-white">Where Zewar operates today.</h2>
+          <h2 className="section-title text-white">
+            Where {COMPANY.shortName} operates today.
+          </h2>
 
           <dl className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {companyStats.map((stat) => (
@@ -242,7 +246,7 @@ export default async function About() {
             <div className="grid gap-8 lg:grid-cols-[1.3fr_auto] lg:items-center">
               <div>
                 <span className="inline-block rounded-full bg-gold-500/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-gold-400">
-                  Partner with Zewar
+                  Partner with {COMPANY.shortName}
                 </span>
                 <h2 className="section-title-sm mt-4 text-white">
                   Ready to move your next freight load?

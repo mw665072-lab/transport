@@ -125,6 +125,11 @@ export async function setStatus(id: number, status: SubmissionStatus): Promise<v
   await c.updateOne({ id } as never, { $set: { status } });
 }
 
+export async function deleteSubmission(id: number): Promise<void> {
+  const c = await col<Submission>("submissions");
+  await c.deleteOne({ id } as never);
+}
+
 /* ---------------------------------------------------------------- jobs */
 
 export async function listJobs(opts: { includeClosed?: boolean } = {}): Promise<Job[]> {
@@ -222,6 +227,11 @@ export async function setApplicationStatus(
 ): Promise<void> {
   const c = await col<Application>("applications");
   await c.updateOne({ id } as never, { $set: { status } });
+}
+
+export async function deleteApplication(id: number): Promise<void> {
+  const c = await col<Application>("applications");
+  await c.deleteOne({ id } as never);
 }
 
 export async function getApplication(id: number): Promise<Application | null> {
@@ -498,6 +508,11 @@ export async function deleteShipment(id: number): Promise<void> {
   await events.deleteMany({ shipment_id: id } as never);
 }
 
+export async function deleteShipmentEvent(id: number): Promise<void> {
+  const events = await col<ShipmentEvent>("shipment_events");
+  await events.deleteOne({ id } as never);
+}
+
 /* ----------------------------------------------------------- documents */
 
 export async function insertDocument(input: {
@@ -550,6 +565,11 @@ export async function getDocument(id: number): Promise<DocumentRecord | null> {
 export async function setDocumentStatus(id: number, status: string): Promise<void> {
   const c = await col<DocumentRecord>("documents");
   await c.updateOne({ id } as never, { $set: { status } });
+}
+
+export async function deleteDocument(id: number): Promise<void> {
+  const c = await col<DocumentRecord>("documents");
+  await c.deleteOne({ id } as never);
 }
 
 /** One submission, used to prefill a shipment created from a quote. */
